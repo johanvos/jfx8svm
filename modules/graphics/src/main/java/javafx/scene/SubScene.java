@@ -167,7 +167,7 @@ public class SubScene extends Node {
         }
     }
 
-    private static boolean is3DSupported =
+    private boolean is3DSupported =
             Platform.isSupported(ConditionalFeature.SCENE3D);
 
     private final SceneAntialiasing antiAliasing;
@@ -318,7 +318,7 @@ public class SubScene extends Node {
                     Camera _value = get();
                     if (_value != null) {
                         if (_value instanceof PerspectiveCamera
-                                && !SubScene.is3DSupported) {
+                                && !is3DSupported) {
                             String logname = SubScene.class.getName();
                             PlatformLogger.getLogger(logname).warning("System can't support "
                                     + "ConditionalFeature.SCENE3D");
