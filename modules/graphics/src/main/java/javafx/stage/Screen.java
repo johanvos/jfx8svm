@@ -63,7 +63,7 @@ public final class Screen {
     private static final AtomicBoolean configurationDirty =
             new AtomicBoolean(true);
 
-    private static final ScreenConfigurationAccessor accessor;
+    private static ScreenConfigurationAccessor accessor = null;
 
     private static Screen primary;
     private static final ObservableList<Screen> screens =
@@ -76,10 +76,16 @@ public final class Screen {
             @Override public float getRenderScale(Screen screen) { return screen.getRenderScale(); }
         });
 
-        accessor = Toolkit.getToolkit().setScreenConfigurationListener(() -> updateConfiguration());
+    }
+
+    private static void postClinit() {
+        if (accessor == null) {
+            accessor = Toolkit.getToolkit().setScreenConfigurationListener(() -> updateConfiguration());
+        }
     }
 
     private Screen() {
+        postClinit();
     }
 
     private static void checkDirty() {
@@ -129,6 +135,7 @@ public final class Screen {
 
     // returns null if the new one is to be equal the old one
     private static Screen nativeToScreen(Object obj, Screen screen) {
+        postClinit();
         int minX = accessor.getMinX(obj);
         int minY = accessor.getMinY(obj);
         int width = accessor.getWidth(obj);
