@@ -384,7 +384,8 @@ import sun.util.logging.PlatformLogger.Level;
 public abstract class Node implements EventTarget, Styleable {
 
      static {
-          PerformanceTracker.logEvent("Node class loaded");
+         // remove and avoid Toolkit to be initialized
+          // PerformanceTracker.logEvent("Node class loaded");
      }
 
     /**************************************************************************
