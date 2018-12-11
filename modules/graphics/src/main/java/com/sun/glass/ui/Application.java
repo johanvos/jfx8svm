@@ -96,6 +96,8 @@ public abstract class Application {
 
     private static boolean loaded = false;
     private static Application application;
+    private static boolean applicationRunning = false;
+
     private static Thread eventThread;
     private static final boolean disableThreadChecks =
         AccessController.doPrivileged((PrivilegedAction<Boolean>) () -> {
@@ -140,10 +142,13 @@ public abstract class Application {
 
     // May be called on any thread.
     public static void run(final Runnable launchable) {
-        if (application != null) {
+        if (applicationRunning) {
             throw new IllegalStateException("Application is already running");
         }
-        application = PlatformFactory.getPlatformFactory().createApplication();
+        if (application == null) {
+            application = PlatformFactory.getPlatformFactory().createApplication();
+        }
+        applicationRunning = true;
         // each concrete Application should set the app name using its own platform mechanism:
         // on Mac OS X - use NSBundle info, which can be overriden by -Xdock:name
         // on Windows - TODO
@@ -401,6 +406,9 @@ public abstract class Application {
 
     // May be called on any thread
     static public Application GetApplication() {
+        if (application == null) {
+            application = PlatformFactory.getPlatformFactory().createApplication();
+        }
         return Application.application;
     }
 

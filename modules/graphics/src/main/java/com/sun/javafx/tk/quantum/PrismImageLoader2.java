@@ -225,8 +225,8 @@ class PrismImageLoader2 implements com.sun.javafx.tk.ImageLoader {
     static final class AsyncImageLoader
         extends AbstractRemoteResource<PrismImageLoader2>
     {
-        private static final ExecutorService BG_LOADING_EXECUTOR =
-                createExecutor();
+        private static ExecutorService BG_LOADING_EXECUTOR = null;
+                // createExecutor();
 
         private final AccessControlContext acc;
 
@@ -234,12 +234,17 @@ class PrismImageLoader2 implements com.sun.javafx.tk.ImageLoader {
         boolean preserveRatio;
         boolean smooth;
 
+        private static void postClinit() {
+            BG_LOADING_EXECUTOR = createExecutor();
+        }
+
         public AsyncImageLoader(
                 AsyncOperationListener<PrismImageLoader2> listener,
                 String url,
                 int width, int height, boolean preserveRatio, boolean smooth)
         {
             super(url, listener);
+            postClinit();
             this.width = width;
             this.height = height;
             this.preserveRatio = preserveRatio;

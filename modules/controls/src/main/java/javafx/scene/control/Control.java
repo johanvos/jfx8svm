@@ -81,7 +81,7 @@ import sun.util.logging.PlatformLogger.Level;
  */
 public abstract class Control extends Region implements Skinnable {
 
-    static {
+    static void postClinit() {
         // Ensures that the default application user agent stylesheet is loaded
         if (Application.getUserAgentStylesheet() == null) {
             PlatformImpl.setDefaultPlatformUserAgentStylesheet();
@@ -411,6 +411,7 @@ public abstract class Control extends Region implements Skinnable {
      *  Create a new Control.
      */
     protected Control() {
+        postClinit();
         // focusTraversable is styleable through css. Calling setFocusTraversable
         // makes it look to css like the user set the value and css will not
         // override. Initializing focusTraversable by calling applyStyle
