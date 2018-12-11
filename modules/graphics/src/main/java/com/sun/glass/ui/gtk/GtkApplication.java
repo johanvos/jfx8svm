@@ -116,6 +116,7 @@ final class GtkApplication extends Application implements
     private final InvokeLaterDispatcher invokeLaterDispatcher;
 
     GtkApplication() {
+/*
 
         final int gtkVersion = forcedGtkVersion == 0 ?
             AccessController.doPrivileged((PrivilegedAction<Integer>) () -> {
@@ -164,6 +165,7 @@ final class GtkApplication extends Application implements
         if (version == -1) {
             throw new RuntimeException("Error loading GTK libraries");
         }
+*/
 
         // Embedded in SWT, with shared event thread
         boolean isEventThread = AccessController
