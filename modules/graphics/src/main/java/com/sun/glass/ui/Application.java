@@ -108,6 +108,7 @@ public abstract class Application {
 
     // May be called on any thread.
     protected static synchronized void loadNativeLibrary(final String libname) {
+System.out.println("[JVDBG] LOAD NATIVE LIBRARY NAMED "+libname);
         // load the native library of the specified libname.
         // the platform default by convention is "glass", all others should have a suffix, ie glass-x11
         if (!loaded) {
@@ -146,7 +147,9 @@ public abstract class Application {
             throw new IllegalStateException("Application is already running");
         }
         if (application == null) {
+            System.err.println("[JVDBG] Will create application now");
             application = PlatformFactory.getPlatformFactory().createApplication();
+            System.err.println("[JVDBG] Did create application now");
         }
         applicationRunning = true;
         // each concrete Application should set the app name using its own platform mechanism:
@@ -406,8 +409,10 @@ public abstract class Application {
 
     // May be called on any thread
     static public Application GetApplication() {
+        // We now create the app in the constructor once.
         if (application == null) {
-            application = PlatformFactory.getPlatformFactory().createApplication();
+System.err.println("[FIX GETAPPLICATION] shouldn't reach here");
+            // application = PlatformFactory.getPlatformFactory().createApplication();
         }
         return Application.application;
     }
