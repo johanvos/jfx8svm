@@ -44,6 +44,12 @@ public abstract class Application {
     private final static String DEFAULT_NAME = "java";
     protected String name = DEFAULT_NAME;
 
+    public static com.sun.glass.ui.Screen[] dummyScreens;
+    static {
+        System.err.println("initialize screen[]");
+        dummyScreens = new com.sun.glass.ui.Screen[1];
+    }
+
     public static class EventHandler {
         // currently used only on Mac OS X
         public void handleWillFinishLaunchingAction(Application app, long time) {
