@@ -63,6 +63,7 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
     (void) reserved;
 
     javaVM = jvm;
+fprintf(stderr, "SIMPLEONLOAD called, return 1.6\n");
 
     return JNI_VERSION_1_6;
 }

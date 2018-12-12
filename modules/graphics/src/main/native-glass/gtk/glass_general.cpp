@@ -104,6 +104,7 @@ jmethodID jIteratorHasNext;
 jmethodID jIteratorNext;
 
 jclass jApplicationCls;
+jclass jParentApplicationCls;
 jfieldID jApplicationDisplay;
 jfieldID jApplicationScreen;
 jfieldID jApplicationVisualID;
@@ -126,6 +127,7 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
     JNIEnv *env;
     jclass clazz;
     Display* display;
+fprintf(stderr, "JNI_OnLoad called in glass gtk lib\n");
 
     if (jvm->GetEnv((void **)&env, JNI_VERSION_1_6)) {
          return JNI_ERR; /* JNI version not supported */
@@ -309,15 +311,22 @@ JNI_OnLoad(JavaVM *jvm, void *reserved)
     if (env->ExceptionCheck()) return JNI_ERR;
     jApplicationVisualID = env->GetStaticFieldID(jApplicationCls, "visualID", "J");
     if (env->ExceptionCheck()) return JNI_ERR;
+
+    clazz = env->FindClass("com/sun/glass/ui/Application");
+    if (env->ExceptionCheck()) return JNI_ERR;
+    jParentApplicationCls = (jclass) env->NewGlobalRef(clazz);
+
+
+
     jApplicationReportException = env->GetStaticMethodID(
-        jApplicationCls, "reportException", "(Ljava/lang/Throwable;)V");
+        jParentApplicationCls, "reportException", "(Ljava/lang/Throwable;)V");
     if (env->ExceptionCheck()) return JNI_ERR;
     jApplicationGetApplication = env->GetStaticMethodID(
-        jApplicationCls, "GetApplication", "()Lcom/sun/glass/ui/Application;");
+        jParentApplicationCls, "GetApplication", "()Lcom/sun/glass/ui/Application;");
     if (env->ExceptionCheck()) return JNI_ERR;
-    jApplicationGetName = env->GetMethodID(jApplicationCls, "getName", "()Ljava/lang/String;");
+    jApplicationGetName = env->GetMethodID(jParentApplicationCls, "getName", "()Ljava/lang/String;");
     if (env->ExceptionCheck()) return JNI_ERR;
-
+fprintf(stderr, "GLASS-ONLOAD will return JNI_1_6\n");
     return JNI_VERSION_1_6;
 }
 
