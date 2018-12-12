@@ -36,7 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.HashMap;
 
 /**
  * This class represents a specific event type associated with an {@code Event}.
@@ -67,7 +67,7 @@ public final class EventType<T extends Event> implements Serializable{
     public static final EventType<Event> ROOT =
             new EventType<Event>("EVENT", null);
 
-    private WeakHashMap<EventType<? extends T>, Void> subTypes;
+    private HashMap<EventType<? extends T>, Void> subTypes;
 
     private final EventType<? super T> superType;
 
@@ -178,7 +178,7 @@ public final class EventType<T extends Event> implements Serializable{
 
     private void register(javafx.event.EventType<? extends T> subType) {
         if (subTypes == null) {
-            subTypes = new WeakHashMap<EventType<? extends T>, Void>();
+            subTypes = new HashMap<EventType<? extends T>, Void>();
         }
         for (EventType<? extends T> t : subTypes.keySet()) {
             if (((t.name == null && subType.name == null) || (t.name != null && t.name.equals(subType.name)))) {
