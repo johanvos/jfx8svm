@@ -58,7 +58,7 @@ public class LabeledText extends Text {
 
    public LabeledText(Labeled labeled) {
        super();
-        postClinit();
+
        if (labeled == null) {
            throw new IllegalArgumentException("labeled cannot be null");
        }
@@ -119,40 +119,19 @@ public class LabeledText extends Text {
         return fontMirror;
     }
 
-    private static CssMetaData<LabeledText,Font> FONT = null;
-    private static CssMetaData<LabeledText,Paint> FILL = null;
+    private static final CssMetaData<LabeledText,Font> FONT =
+        new FontCssMetaData<LabeledText>("-fx-font", Font.getDefault()) {
 
-    private void postClinit() {
-        if (FONT == null) {
-            FONT = new FontCssMetaData<LabeledText>("-fx-font", Font.getDefault()) {
-
-                @Override
-                public boolean isSettable(LabeledText node) {
-                    return node.labeled != null ? node.labeled.fontProperty().isBound() == false : true;
-                }
-
-                @Override
-                public StyleableProperty<Font> getStyleableProperty(LabeledText node) {
-                    return node.fontMirror();
-                }
-            };
+        @Override
+        public boolean isSettable(LabeledText node) {
+            return node.labeled != null ? node.labeled.fontProperty().isBound() == false : true;
         }
-        if (FILL == null) {
-            FILL = new CssMetaData<LabeledText,Paint>("-fx-fill",
-                PaintConverter.getInstance(), Color.BLACK) {
 
-                @Override
-                public boolean isSettable(LabeledText node) {
-                    return node.labeled.textFillProperty().isBound() == false;
-                }
-
-                @Override
-                public StyleableProperty<Paint> getStyleableProperty(LabeledText node) {
-                    return node.fillMirror();
-                }
-            };
+        @Override
+        public StyleableProperty<Font> getStyleableProperty(LabeledText node) {
+            return node.fontMirror();
         }
-    }
+    };
 
     private StyleablePropertyMirror<Paint> fillMirror;
     private StyleableProperty<Paint> fillMirror() {
@@ -163,6 +142,20 @@ public class LabeledText extends Text {
         return fillMirror;
     }
 
+    private static final CssMetaData<LabeledText,Paint> FILL =
+        new CssMetaData<LabeledText,Paint>("-fx-fill",
+            PaintConverter.getInstance(), Color.BLACK) {
+
+            @Override
+            public boolean isSettable(LabeledText node) {
+                return node.labeled.textFillProperty().isBound() == false;
+            }
+
+            @Override
+            public StyleableProperty<Paint> getStyleableProperty(LabeledText node) {
+                return node.fillMirror();
+            }
+        };
 
     private StyleablePropertyMirror<TextAlignment> textAlignmentMirror;
     private StyleableProperty<TextAlignment> textAlignmentMirror() {
