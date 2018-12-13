@@ -74,13 +74,14 @@ Thread.dumpStack();
     public void setStage(GlassStage stage) {
 Thread.dumpStack();
         super.setStage(stage);
+}
 /*
  * remove this block to get unsupported features on SVM
     }
+*/
 
     public void postSetStage(GlassStage stage) {
 Thread.dumpStack();
-*/
         if (stage != null) {
             WindowStage wstage  = (WindowStage)stage;
             if (wstage.needsUpdateWindow() || GraphicsPipeline.getPipeline().isUploading()) {

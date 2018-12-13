@@ -174,7 +174,7 @@ Thread.dumpStack();
                         }
                     }
 
-                    return debug;
+                    return true;//debug;
                 }
         );
         cacheLayoutSize = tempCacheLayoutSize[0];
@@ -208,6 +208,7 @@ Thread.dumpStack();
             useNativeRasterizer = false;
             factoryClass = T2K_FACTORY;
         }
+System.err.println("FC = "+factoryClass);
         if (debugFonts) {
             System.err.println("Loading FontFactory " + factoryClass);
             if (subPixelMode != 0) {
@@ -222,6 +223,7 @@ Thread.dumpStack();
             }
         }
         theFontFactory = getFontFactory(factoryClass);
+System.err.println("TFF = "+theFontFactory);
         if (theFontFactory == null) {
             if (useNativeRasterizer) {
                 // If native failed use T2K (i.e. Windows Vista)
@@ -246,11 +248,15 @@ Thread.dumpStack();
     private static synchronized PrismFontFactory getFontFactory(String factoryClass) {
         try {
             Class<?> clazz = Class.forName(factoryClass);
+System.out.println("Class = "+clazz);
             Method mid = clazz.getMethod("getFactory", (Class[])null);
-            return (PrismFontFactory)mid.invoke(null);
+System.out.println("mid = "+mid);
+return com.sun.javafx.font.freetype.FTFactory.getFactory();
+            // return (PrismFontFactory)mid.invoke(null);
         } catch (Throwable t) {
             if (debugFonts) {
                 System.err.println("Loading font factory failed "+ factoryClass);
+t.printStackTrace();
             }
         }
         return null;

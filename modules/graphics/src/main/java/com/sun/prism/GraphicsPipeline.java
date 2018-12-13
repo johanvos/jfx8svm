@@ -122,6 +122,7 @@ System.err.println(Thread.currentThread()+" [JVDBG] dispose pipeline!");
     }
 
     public FontFactory getFontFactory() {
+System.err.println("[JVDBG] GETFONTFACTORY, ff = "+fontFactory);
         if (fontFactory == null) {
             fontFactory = PrismFontFactory.getFontFactory();
         }

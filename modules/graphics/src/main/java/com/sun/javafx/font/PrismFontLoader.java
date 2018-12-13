@@ -195,6 +195,9 @@ public class PrismFontLoader extends FontLoader {
         FontFactory fontFactory = getFontFactoryFromPipeline();
 System.err.println("[JVDBG] FontFactory = "+fontFactory);
 System.err.println("[JVDBG] font= "+font);
+        if (fontFactory == null) {
+System.err.println("[JVDBG] No fontfactory found");
+        }
         String fullName = font.getName();
         if (!embeddedFontsLoaded && !fontFactory.isPlatformFont(fullName)) {
             loadEmbeddedFonts();

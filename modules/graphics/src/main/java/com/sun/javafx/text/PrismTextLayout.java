@@ -135,6 +135,7 @@ public class PrismTextLayout implements TextLayout {
         reset();
         this.spans = null;
         this.font = (PGFont)font;
+System.err.println("[JVDBG] setContent, text = "+text+", font = "+font+" of class "+font.getClass()+", IDENTIY = "+IDENTITY);
         this.strike = ((PGFont)font).getStrike(IDENTITY);
         this.text = text.toCharArray();
         if (MAX_CACHE_SIZE > 0) {

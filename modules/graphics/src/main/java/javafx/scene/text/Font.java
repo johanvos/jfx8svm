@@ -66,10 +66,12 @@ public final class Font {
      */
     private static float defaultSystemFontSize = -1;
     private static float getDefaultSystemFontSize() {
+System.err.println("[JVDBG] GetDefaultSystemFontSize, for now = "+defaultSystemFontSize);
         if (defaultSystemFontSize == -1) {
             defaultSystemFontSize =
                 Toolkit.getToolkit().getFontLoader().getSystemFontSize();
         }
+System.err.println("[JVDBG] GetDefaultSystemFontSize, resuilt = "+defaultSystemFontSize);
         return defaultSystemFontSize;
     }
 
@@ -82,8 +84,14 @@ public final class Font {
      * @return The default font.
      */
     public static synchronized Font getDefault() {
+System.err.println("[JVDBG] Font.getDefault, DEFAULT = "+DEFAULT);
         if (DEFAULT == null) {
-            DEFAULT = new Font(DEFAULT_FULLNAME, getDefaultSystemFontSize());
+            try {
+                DEFAULT = new Font(DEFAULT_FULLNAME, getDefaultSystemFontSize());
+            }
+            catch (Exception e) {
+System.err.println("[JVDBG] Couldn't load default font, try again later due to "+e);
+            }
         }
         return DEFAULT;
     }

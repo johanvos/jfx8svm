@@ -485,7 +485,9 @@ public class Text extends Shape {
      */
     private Object getFontInternal() {
         Font font = getFont();
+System.err.println("[JVDBG] getFontInternal font1 = "+font);
         if (font == null) font = Font.getDefault();
+System.err.println("[JVDBG] getFontInternal font2 = "+font);
         return font.impl_getNativeFont();
     }
 
