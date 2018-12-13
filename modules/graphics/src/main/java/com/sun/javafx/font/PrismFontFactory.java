@@ -48,19 +48,19 @@ import com.sun.javafx.text.GlyphLayout;
 
 public abstract class PrismFontFactory implements FontFactory {
 
-    public static final boolean debugFonts;
-    public static final boolean isWindows;
-    public static final boolean isLinux;
-    public static final boolean isMacOSX;
-    public static final boolean isIOS;
-    public static final boolean isAndroid;
-    public static final boolean isEmbedded;
-    public static final int cacheLayoutSize;
+    public static boolean debugFonts;
+    public static boolean isWindows;
+    public static boolean isLinux;
+    public static boolean isMacOSX;
+    public static boolean isIOS;
+    public static boolean isAndroid;
+    public static boolean isEmbedded;
+    public static int cacheLayoutSize;
     static boolean useNativeRasterizer;
     private static int subPixelMode;
-    public static final int SUB_PIXEL_ON = 1;
-    public static final int SUB_PIXEL_Y = 2;
-    public static final int SUB_PIXEL_NATIVE = 4;
+    public static int SUB_PIXEL_ON = 1;
+    public static int SUB_PIXEL_Y = 2;
+    public static int SUB_PIXEL_NATIVE = 4;
     private static float fontSizeLimit = 80f;
 
     private static boolean lcdEnabled;
@@ -87,13 +87,23 @@ public abstract class PrismFontFactory implements FontFactory {
         new HashMap<String, CompositeFontResource>();
 
     static {
+        cacheLayoutSize = 0x10000;
+Thread.dumpStack();
+/*
+    }
+
+    static boolean postClinitDone = false;
+
+    static void postClinit() {
+Thread.dumpStack();
+*/
+        int[] tempCacheLayoutSize = {0x10000};
         isWindows = PlatformUtil.isWindows();
         isMacOSX  = PlatformUtil.isMac();
         isLinux   = PlatformUtil.isLinux();
         isIOS     = PlatformUtil.isIOS();
         isAndroid = PlatformUtil.isAndroid();
         isEmbedded = PlatformUtil.isEmbedded();
-        int[] tempCacheLayoutSize = {0x10000};
 
         debugFonts = AccessController.doPrivileged(
                 (PrivilegedAction<Boolean>) () -> {
@@ -168,6 +178,7 @@ public abstract class PrismFontFactory implements FontFactory {
                 }
         );
         cacheLayoutSize = tempCacheLayoutSize[0];
+        // postClinitDone = true;
     }
 
     private static String getNativeFactoryName() {
@@ -183,6 +194,9 @@ public abstract class PrismFontFactory implements FontFactory {
 
     private static PrismFontFactory theFontFactory = null;
     public static synchronized PrismFontFactory getFontFactory() {
+        // if (!postClinitDone) {
+            // postClinit();
+        // }
         if (theFontFactory != null) {
             return theFontFactory;
         }
@@ -898,7 +912,7 @@ public abstract class PrismFontFactory implements FontFactory {
     }
 
     /* Used to indicate required return type from toArray(..); */
-    private static final String[] STR_ARRAY = new String[0];
+    private static String[] STR_ARRAY = new String[0];
 
     /* Obtained from Platform APIs (windows only)
      * Map from lower-case font full name to basename of font file.

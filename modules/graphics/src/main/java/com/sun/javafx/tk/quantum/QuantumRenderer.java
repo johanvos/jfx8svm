@@ -120,12 +120,16 @@ final class QuantumRenderer extends ThreadPoolExecutor  {
         }
 
         @Override public void run() {
+System.err.println("[JVDBG] QUANTUMRENDERERPIPELINERUN FOR "+this);
+// Thread.dumpStack();
+// System.err.println("[JVDBG] QUANTUMRENDERERPIPELINERUN FOR "+this);
             try {
                 init();
                 work.run();
             } finally {
                 cleanup();
             }
+System.err.println("[JVDBG] DONE QUANTUMRENDERERPIPELINERUN FOR "+this);
         }
     }
 
@@ -133,9 +137,13 @@ final class QuantumRenderer extends ThreadPoolExecutor  {
         final AtomicInteger threadNumber = new AtomicInteger(0);
 
         @Override public Thread newThread(Runnable r) {
+System.out.println("[JVDBG] QUANTUMTHREADFACTORY creates a new thread");
+// Thread.dumpStack();
             final PipelineRunnable pipeline = new PipelineRunnable(r);
             _renderer =
                 AccessController.doPrivileged((PrivilegedAction<Thread>) () -> {
+System.out.println("[JVDBG] QUANTUMTHREADFACTORY creates a new threadaccesscontroller");
+// Thread.dumpStack();
                     Thread th = new Thread(pipeline);
                     th.setName("QuantumRenderer-" + threadNumber.getAndIncrement());
                     th.setDaemon(true);
@@ -153,6 +161,7 @@ final class QuantumRenderer extends ThreadPoolExecutor  {
     }
 
     protected void createResourceFactory() {
+Thread.dumpStack();
         final CountDownLatch createLatch = new CountDownLatch(1);
 
         final CompletionListener createDone = job -> createLatch.countDown();
@@ -215,6 +224,8 @@ final class QuantumRenderer extends ThreadPoolExecutor  {
     }
 
     protected Future submitRenderJob(RenderJob r) {
+Thread.dumpStack();
+System.err.println("[JVDBG] submitrenderjob: "+r);
         return (submit(r));
     }
 
@@ -255,6 +266,7 @@ final class QuantumRenderer extends ThreadPoolExecutor  {
     }
 
     public static synchronized QuantumRenderer getInstance() {
+Thread.dumpStack();
         if (instanceReference.get() == null) {
             synchronized (QuantumRenderer.class) {
                 QuantumRenderer newTk = null;

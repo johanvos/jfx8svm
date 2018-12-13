@@ -193,6 +193,8 @@ public class PrismFontLoader extends FontLoader {
      */
     @Override public void loadFont(Font font) {
         FontFactory fontFactory = getFontFactoryFromPipeline();
+System.err.println("[JVDBG] FontFactory = "+fontFactory);
+System.err.println("[JVDBG] font= "+font);
         String fullName = font.getName();
         if (!embeddedFontsLoaded && !fontFactory.isPlatformFont(fullName)) {
             loadEmbeddedFonts();
@@ -248,12 +250,18 @@ public class PrismFontLoader extends FontLoader {
         }
         try {
             Class plc = Class.forName("com.sun.prism.GraphicsPipeline");
+System.err.println("plc = "+plc);
             Method gpm = plc.getMethod("getPipeline", (Class[])null);
+System.err.println("gpm = "+gpm);
             Object plo = gpm.invoke(null);
+System.err.println("plo = "+plo);
             Method gfm = plc.getMethod("getFontFactory", (Class[])null);
+System.err.println("gfm = "+gfm);
             Object ffo = gfm.invoke(plo);
+System.err.println("ffo = "+ffo);
             installedFontFactory = (FontFactory)ffo;
         } catch (Exception e) {
+e.printStackTrace();
         }
         return installedFontFactory;
     }

@@ -58,8 +58,8 @@ public abstract class PresentableState {
     protected int screenWidth;
     protected boolean isWindowVisible;
     protected boolean isWindowMinimized;
-    protected static final boolean hasWindowManager =
-            Application.GetApplication().hasWindowManager();
+    protected static final boolean hasWindowManager = true;
+            // Application.GetApplication().hasWindowManager();
     // Between PaintCollector and *Painter, there is a window where
     // the associated View can be closed. This variable allows us
     // to shortcut the queued *Painter task.

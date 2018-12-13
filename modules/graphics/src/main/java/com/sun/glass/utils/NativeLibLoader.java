@@ -35,24 +35,28 @@ public class NativeLibLoader {
     private static final HashSet<String> loaded = new HashSet<String>();
 
     public static synchronized void loadLibrary(String libname) {
-        if (!loaded.contains(libname)) {
+System.out.println("[NLL] loaded = "+loaded+" and libane = "+libname);
+Thread.dumpStack();
+        // if (!loaded.contains(libname)) {
             loadLibraryInternal(libname);
             loaded.add(libname);
-        }
+        // }
     }
 
-    private static boolean verbose = false;
+    private static boolean verbose = true;
 
     private static File libDir = null;
     private static String libPrefix = "";
     private static String libSuffix = "";
 
+/*
     static {
         AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
             verbose = Boolean.getBoolean("javafx.verbose");
             return null;
         });
     }
+*/
 
     private static String[] initializePath(String propname) {
         String ldpath = System.getProperty(propname, "");
@@ -93,15 +97,18 @@ public class NativeLibLoader {
         try {
             loadLibraryFullPath(libraryName);
         } catch (UnsatisfiedLinkError ex) {
+ex.printStackTrace();
             // NOTE: First attempt to load the libraries from the java.library.path.
             // This allows FX to find more recent versions of the shared libraries
             // from java.library.path instead of ones that might be part of the JRE
             //
             String [] libPath = initializePath("java.library.path");
+System.err.println("LIBPATH length = "+libPath.length);
             for (int i=0; i<libPath.length; i++) {
                 try {
                     String path = libPath[i];
                     if (!path.endsWith(File.separator)) path += File.separator;
+System.out.println("PATH = "+path);
                     String fileName = System.mapLibraryName(libraryName);
                     File libFile = new File(path + fileName);
                     System.load(libFile.getAbsolutePath());
@@ -111,6 +118,7 @@ public class NativeLibLoader {
                     }
                     return;
                 } catch (UnsatisfiedLinkError ex3) {
+ex3.printStackTrace();
                     // Fail silently and try the next directory in java.library.path
                 }
             }
@@ -151,6 +159,7 @@ public class NativeLibLoader {
      * containing this class.
      */
     private static void loadLibraryFullPath(String libraryName) {
+System.err.println("[NLL] libdir = "+libDir);
         try {
             if (libDir == null) {
                 // Get the URL for this class, if it is a jar URL, then get the
@@ -194,11 +203,13 @@ public class NativeLibLoader {
                     libSuffix = ".so";
                 }
             }
-
+System.err.println("LIBDIR = "+libDir);
             File libFile = new File(libDir, libPrefix + libraryName + libSuffix);
             String libFileName = libFile.getCanonicalPath();
+System.err.println("LOADING from file "+libFileName);
             try {
                 System.load(libFileName);
+System.err.println("LOADED from file "+libFileName);
                 if (verbose) {
                     System.err.println("Loaded " + libFile.getAbsolutePath()
                             + " from relative path");

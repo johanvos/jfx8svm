@@ -230,6 +230,11 @@ final class GtkApplication extends Application implements
         _init(eventProc, disableGrab);
     }
 
+    // @Override
+    // public String getName() {
+        // return super.getName();
+    // }
+
     @Override
     protected void runLoop(final Runnable launchable) {
         // Embedded in SWT, with shared event thread

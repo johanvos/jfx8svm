@@ -215,6 +215,12 @@ public final class QuantumToolkit extends Toolkit {
     private final PerformanceTracker perfTracker = new PerformanceTrackerImpl();
 
     @Override public boolean init() {
+Thread.dumpStack();
+        return true;
+    }
+
+    public boolean postInit() {
+Thread.dumpStack();
         /*
          * Glass Mac, X11 need Application.setDeviceDetails to happen prior to Glass Application.Run
          */
@@ -247,6 +253,8 @@ public final class QuantumToolkit extends Toolkit {
      *                            functionality after the toolkit has been initialized.
      */
     @Override public void startup(final Runnable userStartupRunnable) {
+// postInit();
+Thread.dumpStack();
         // Save the context class loader of the launcher thread
         ccl = Thread.currentThread().getContextClassLoader();
 
@@ -254,7 +262,9 @@ public final class QuantumToolkit extends Toolkit {
             this.userRunnable = userStartupRunnable;
 
             // Ensure that the toolkit can only be started here
+System.err.println("START APPLICATION.RUN");
             Application.run(() -> runToolkit());
+System.err.println("DONE START APPLICATION.RUN");
         } catch (RuntimeException ex) {
             if (verbose) {
                 ex.printStackTrace();
@@ -300,6 +310,7 @@ public final class QuantumToolkit extends Toolkit {
 
     // Called by Glass from Application.run()
     void runToolkit() {
+        postInit();
         Thread user = Thread.currentThread();
 
         if (!toolkitRunning.getAndSet(true)) {
@@ -429,6 +440,7 @@ public final class QuantumToolkit extends Toolkit {
     }
 
     @Override public Future addRenderJob(RenderJob r) {
+Thread.dumpStack();
         // Do not run any render jobs (this is for benchmarking only)
         if (noRenderJobs) {
             CompletionListener listener = r.getCompletionListener();
@@ -681,6 +693,7 @@ public final class QuantumToolkit extends Toolkit {
 
     private static void assignScreensAdapters() {
         GraphicsPipeline pipeline = GraphicsPipeline.getPipeline();
+System.err.println("[JVDBG] assign screen, pipeline = "+pipeline);
         for (Screen screen : Screen.getScreens()) {
             screen.setAdapterOrdinal(pipeline.getAdapterOrdinal(screen));
         }
@@ -1148,6 +1161,9 @@ public final class QuantumToolkit extends Toolkit {
 
     @Override
     public boolean isSupported(ConditionalFeature feature) {
+System.err.println("[JVDBG] NEED TO ADD QT.ISSUPPORTED!");
+return true;
+/*
         switch (feature) {
             case SCENE3D:
                 return GraphicsPipeline.getPipeline().is3DSupported();
@@ -1174,6 +1190,7 @@ public final class QuantumToolkit extends Toolkit {
             default:
                 return false;
         }
+*/
     }
 
     @Override

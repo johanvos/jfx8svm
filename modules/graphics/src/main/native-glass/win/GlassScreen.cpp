@@ -485,6 +485,7 @@ void propagateAnchors(MonitorInfoStruct *pMIS, jint pass) {
 
 jobjectArray GlassScreen::CreateJavaScreens(JNIEnv *env)
 {
+fprintf(stderr, "CREATEJAVASCREEN ASKED\n");
     if (g_MonitorInfos.maxInfos > 0) {
         int numMonitors = g_MonitorInfos.numInfos;
         for (int i = 0; i < numMonitors; i++) {
@@ -575,9 +576,12 @@ jobjectArray GlassScreen::CreateJavaScreens(JNIEnv *env)
         }
     } while (JNI_TRUE);
 
+fprintf(stderr, "CREATEJAVASCREEN ASKED 1\n");
     jclass screenCls = GetScreenCls(env);
+fprintf(stderr, "CREATEJAVASCREEN ASKED 2\n");
 
     jobjectArray jScreens = env->NewObjectArray(numMonitors, screenCls, NULL);
+fprintf(stderr, "CREATEJAVASCREEN ASKED 3\n");
     if (CheckAndClearException(env)) {
         free(g_MonitorInfos.pMonitorInfos);
         g_MonitorInfos.numInfos = g_MonitorInfos.maxInfos = 0;
@@ -594,6 +598,7 @@ jobjectArray GlassScreen::CreateJavaScreens(JNIEnv *env)
         CheckAndClearException(env);
         env->DeleteLocalRef(jScreen);
     }
+fprintf(stderr, "CREATEJAVASCREEN ASKED 4\n");
 
     return jScreens;
 }

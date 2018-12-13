@@ -39,6 +39,9 @@ import javafx.scene.Parent;
 
 class ViewScene extends GlassScene {
 
+static {
+Thread.dumpStack();
+}
     private static final String UNSUPPORTED_FORMAT =
         "Transparent windows only supported for BYTE_BGRA_PRE format on LITTLE_ENDIAN machines";
 
@@ -49,6 +52,7 @@ class ViewScene extends GlassScene {
 
     public ViewScene(boolean depthBuffer, boolean msaa) {
         super(depthBuffer, msaa);
+Thread.dumpStack();
 
         this.platformView = Application.GetApplication().createView();
         this.platformView.setEventHandler(new GlassViewEventHandler(this));
@@ -68,7 +72,12 @@ class ViewScene extends GlassScene {
 
     @Override
     public void setStage(GlassStage stage) {
+Thread.dumpStack();
         super.setStage(stage);
+    }
+
+    public void postSetStage(GlassStage stage) {
+Thread.dumpStack();
         if (stage != null) {
             WindowStage wstage  = (WindowStage)stage;
             if (wstage.needsUpdateWindow() || GraphicsPipeline.getPipeline().isUploading()) {
@@ -80,6 +89,7 @@ class ViewScene extends GlassScene {
             } else {
                 painter = new PresentingPainter(this);
             }
+System.err.println("[JVDBG] ViewScene sets stage, creates painter: "+painter);
             painter.setRoot(getRoot());
             paintRenderJob = new PaintRenderJob(this, PaintCollector.getInstance().getRendered(), painter);
         }

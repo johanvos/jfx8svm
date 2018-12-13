@@ -40,6 +40,10 @@ import com.sun.prism.impl.QueuedPixelSource;
  */
 final class UploadingPainter extends ViewPainter implements Runnable {
 
+static {
+Thread.dumpStack();
+}
+
     private RTTexture   rttexture;
     // resolveRTT is a temporary render target to "resolve" a msaa render buffer
     // into a normal color render target.
@@ -50,6 +54,7 @@ final class UploadingPainter extends ViewPainter implements Runnable {
 
     UploadingPainter(GlassScene view) {
         super(view);
+Thread.dumpStack();
     }
 
     void disposeRTTexture() {
@@ -69,6 +74,11 @@ final class UploadingPainter extends ViewPainter implements Runnable {
     }
 
     @Override public void run() {
+System.err.println("RUN UPLOADINGPAINTER");
+if (!com.sun.glass.ui.Application.applicationRunning) {
+System.err.println("GLASS NOT STARTED, IGNORE");
+return;
+}
         renderLock.lock();
 
         boolean errored = false;

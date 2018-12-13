@@ -169,7 +169,7 @@ public final class PrismSettings {
         useNewImageLoader = getBoolean(systemProperties, "prism.newiio", true);
 
         /* Verbose output*/
-        verbose = getBoolean(systemProperties, "prism.verbose", false);
+        verbose = true; //getBoolean(systemProperties, "prism.verbose", false);
 
         /* Prism statistics print frequency, <=0 means "do not print" */
         prismStatFrequency =

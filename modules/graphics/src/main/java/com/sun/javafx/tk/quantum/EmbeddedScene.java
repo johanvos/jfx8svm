@@ -53,10 +53,14 @@ import com.sun.glass.ui.Pixels;
 
 final class EmbeddedScene extends GlassScene implements EmbeddedSceneInterface {
 
+static {
+Thread.dumpStack();
+}
+
     // TODO: synchronize access to embedder from ET and RT
     private HostInterface host;
 
-    private UploadingPainter        painter;
+    // private UploadingPainter        painter;
     private PaintRenderJob          paintRenderJob;
     private float                   renderScale;
 
@@ -74,8 +78,8 @@ final class EmbeddedScene extends GlassScene implements EmbeddedSceneInterface {
         this.embeddedDnD = new EmbeddedSceneDnD(this);
 
         PaintCollector collector = PaintCollector.getInstance();
-        painter = new UploadingPainter(this);
-        paintRenderJob = new PaintRenderJob(this, collector.getRendered(), painter);
+        // painter = new UploadingPainter(this);
+        // paintRenderJob = new PaintRenderJob(this, collector.getRendered(), painter);
     }
 
     @Override
@@ -85,7 +89,7 @@ final class EmbeddedScene extends GlassScene implements EmbeddedSceneInterface {
             host.setEmbeddedScene(null);
             host = null;
             updateSceneState();
-            painter = null;
+            // painter = null;
             paintRenderJob = null;
             texBits = null;
             return null;
@@ -107,7 +111,7 @@ final class EmbeddedScene extends GlassScene implements EmbeddedSceneInterface {
 
     @Override public void setRoot(NGNode root) {
         super.setRoot(root);
-        painter.setRoot(root);
+        // painter.setRoot(root);
     }
 
     @Override

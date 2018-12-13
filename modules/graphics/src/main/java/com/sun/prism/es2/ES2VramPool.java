@@ -33,6 +33,9 @@ import com.sun.prism.impl.TextureResourcePool;
 class ES2VramPool extends BaseResourcePool<ES2TextureData>
     implements TextureResourcePool<ES2TextureData>
 {
+static {
+Thread.dumpStack();
+}
     static ES2VramPool instance = new ES2VramPool();
 
     private ES2VramPool() {

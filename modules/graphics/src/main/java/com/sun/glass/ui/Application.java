@@ -102,7 +102,7 @@ public abstract class Application {
 
     private static boolean loaded = false;
     private static Application application;
-    private static boolean applicationRunning = false;
+    public static boolean applicationRunning = false;
 
     private static Thread eventThread;
     private static final boolean disableThreadChecks =

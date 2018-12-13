@@ -84,6 +84,9 @@ import javafx.scene.input.ScrollEvent.VerticalTextScrollUnits;
  * @since JavaFX 2.0
  */
 public final class KeyEvent extends InputEvent {
+static {
+Thread.dumpStack();
+}
 
     private static final long serialVersionUID = 20121107L;
 

@@ -36,12 +36,33 @@ import com.sun.prism.impl.Disposer;
  * UploadingPainter is used when we need to render into an offscreen buffer.
  */
 final class PresentingPainter extends ViewPainter {
+static {
+Thread.dumpStack();
+}
 
     PresentingPainter(ViewScene view) {
         super(view);
+Thread.dumpStack();
     }
 
     @Override public void run() {
+ System.err.println("RUN PRESENTINGPAINTER");
+String tname = Thread.currentThread().getName();
+System.err.println("NAME = "+tname);
+      if (!com.sun.glass.ui.Application.applicationRunning) {
+      System.err.println("GLASS NOT STARTED, IGNORE");
+return;
+      }
+if (!tname.startsWith("Quantum")) {
+      System.err.println("NOT ON QUANTUM THREAD, IGNORE!");
+return;
+}
+if (1 < 2) {
+return;
+}
+
+System.err.println(Thread.currentThread()+" calls PresentingPainter.run");
+Thread.dumpStack();
         renderLock.lock();
 
         boolean locked = false;
