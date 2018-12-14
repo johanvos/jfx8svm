@@ -298,9 +298,11 @@ public class ES2ResourceFactory extends BaseShaderFactory {
             throw new IllegalArgumentException("Shader name must be non-null");
         }
         try {
-            InputStream stream =
-                    ES2ResourceFactory.class.getResourceAsStream(
-                    "glsl/" + name + ".frag");
+java.io.File f = new java.io.File("/tmp/shader/glsl/"+name+".frag");
+InputStream stream = new java.io.FileInputStream(f);
+            // InputStream stream =
+                    // ES2ResourceFactory.class.getResourceAsStream(
+                    // "glsl/" + name + ".frag");
             Class klass =
                     Class.forName("com.sun.prism.shader." + name + "_Loader");
             if (PrismSettings.verbose) {
