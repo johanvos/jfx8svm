@@ -430,9 +430,11 @@ final class PaintCollector implements CompletionListener {
                 // On platforms with a window manager, we always set doPresent = true, because
                 // we always need to rerender the scene  if it's in the dirty list and we do a
                 // swap on a per-window basis
+System.err.println("[JVDBG] GlassScene, repaint "+gs);
                 gs.setDoPresent(true);
                 try {
                     gs.repaint();
+System.err.println("[JVDBG] GlassScene, donerepaint "+gs);
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }

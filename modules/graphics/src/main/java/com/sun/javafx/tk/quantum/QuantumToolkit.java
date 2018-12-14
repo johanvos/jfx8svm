@@ -253,7 +253,8 @@ Thread.dumpStack();
      *                            functionality after the toolkit has been initialized.
      */
     @Override public void startup(final Runnable userStartupRunnable) {
-// postInit();
+System.err.println("[JVDBG] STARTUP");
+ postInit();
 Thread.dumpStack();
         // Save the context class loader of the launcher thread
         ccl = Thread.currentThread().getContextClassLoader();
@@ -310,7 +311,8 @@ System.err.println("DONE START APPLICATION.RUN");
 
     // Called by Glass from Application.run()
     void runToolkit() {
-        postInit();
+System.err.println("[JVDBG]RUNTOOLKIT");
+        // postInit();
         Thread user = Thread.currentThread();
 
         if (!toolkitRunning.getAndSet(true)) {

@@ -174,7 +174,7 @@ Thread.dumpStack();
                         }
                     }
 
-                    return true;//debug;
+                    return debug;
                 }
         );
         cacheLayoutSize = tempCacheLayoutSize[0];
