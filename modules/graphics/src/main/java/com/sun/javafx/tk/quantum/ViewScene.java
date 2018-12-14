@@ -75,9 +75,9 @@ Thread.dumpStack();
     @Override
     public void setStage(GlassStage stage) {
 Thread.dumpStack();
+        super.setStage(stage);
 /*
 this.myStage = stage;
-        super.setStage(stage);
 }
     public void postSetStage() {
 Thread.dumpStack();
