@@ -55,6 +55,9 @@ import com.sun.prism.ps.Shader;
 import com.sun.prism.ps.ShaderGraphics;
 
 class PaintHelper {
+static {
+Thread.dumpStack();
+}
 
 /****************** Shared MultipleGradientPaint support ********************/
 
@@ -164,6 +167,7 @@ class PaintHelper {
 
     private static void stopsToImage(List<Stop> stops, int numStops)
     {
+Thread.dumpStack();
         if (numStops > MULTI_MAX_FRACTIONS) {
             throw new RuntimeException(
                 "Maximum number of gradient stops exceeded " +
@@ -251,6 +255,8 @@ class PaintHelper {
     // We always increment the cacheOffset (long) and keep the gradients stored
     // the cache in the range [cacheOffset - cacheSize + 1, cacheOffset]..
     public static int initGradient(Gradient paint) {
+Thread.dumpStack();
+System.err.println("PAINTHELPER.INITGRADIENT ACCESSED");
         long offset = paint.getGradientOffset();
         if (offset >= 0 && (offset > cacheOffset - MULTI_CACHE_SIZE)) {
             return (int) (offset % MULTI_CACHE_SIZE);

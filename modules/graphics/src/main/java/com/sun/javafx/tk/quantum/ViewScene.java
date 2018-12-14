@@ -70,18 +70,19 @@ Thread.dumpStack();
         return painter;
     }
 
+    private GlassStage myStage = null;
+
     @Override
     public void setStage(GlassStage stage) {
 Thread.dumpStack();
+/*
+this.myStage = stage;
         super.setStage(stage);
 }
-/*
- * remove this block to get unsupported features on SVM
-    }
-*/
-
-    public void postSetStage(GlassStage stage) {
+    public void postSetStage() {
 Thread.dumpStack();
+        GlassStage stage = myStage;
+*/
         if (stage != null) {
             WindowStage wstage  = (WindowStage)stage;
             if (wstage.needsUpdateWindow() || GraphicsPipeline.getPipeline().isUploading()) {
@@ -150,6 +151,9 @@ System.err.println("[JVDBG] ViewScene sets stage, creates painter: "+painter);
         }
 
         if (!setPainting(true)) {
+if (paintRenderJob == null) {
+// postSetStage();
+}
             Toolkit tk = Toolkit.getToolkit();
             tk.addRenderJob(paintRenderJob);
         }

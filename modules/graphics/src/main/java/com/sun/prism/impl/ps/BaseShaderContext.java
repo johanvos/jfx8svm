@@ -269,6 +269,7 @@ public abstract class BaseShaderContext extends BaseContext {
                                    MaskType maskType, Paint paint,
                                    float bx, float by, float bw, float bh)
     {
+Thread.dumpStack();
         Paint.Type paintType = paint.getType();
         if (paintType == Paint.Type.COLOR || maskType.isNewPaintStyle()) {
             return;
