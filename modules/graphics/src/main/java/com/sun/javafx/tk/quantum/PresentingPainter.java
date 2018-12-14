@@ -57,12 +57,8 @@ if (!tname.startsWith("Quantum")) {
       System.err.println("NOT ON QUANTUM THREAD, IGNORE!");
 return;
 }
-if (1 < 2) {
-return;
-}
 
 System.err.println(Thread.currentThread()+" calls PresentingPainter.run");
-Thread.dumpStack();
         renderLock.lock();
 
         boolean locked = false;
