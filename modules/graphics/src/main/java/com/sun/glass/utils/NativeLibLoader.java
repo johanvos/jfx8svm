@@ -35,8 +35,7 @@ public class NativeLibLoader {
     private static final HashSet<String> loaded = new HashSet<String>();
 
     public static synchronized void loadLibrary(String libname) {
-System.out.println("[NLL] loaded = "+loaded+" and libane = "+libname);
-Thread.dumpStack();
+System.out.println("[NLL] loaded = "+loaded+" and now I have to load "+libname);
         // if (!loaded.contains(libname)) {
             loadLibraryInternal(libname);
             loaded.add(libname);
@@ -103,12 +102,10 @@ ex.printStackTrace();
             // from java.library.path instead of ones that might be part of the JRE
             //
             String [] libPath = initializePath("java.library.path");
-System.err.println("LIBPATH length = "+libPath.length);
             for (int i=0; i<libPath.length; i++) {
                 try {
                     String path = libPath[i];
                     if (!path.endsWith(File.separator)) path += File.separator;
-System.out.println("PATH = "+path);
                     String fileName = System.mapLibraryName(libraryName);
                     File libFile = new File(path + fileName);
                     System.load(libFile.getAbsolutePath());
@@ -118,7 +115,6 @@ System.out.println("PATH = "+path);
                     }
                     return;
                 } catch (UnsatisfiedLinkError ex3) {
-ex3.printStackTrace();
                     // Fail silently and try the next directory in java.library.path
                 }
             }
@@ -159,7 +155,6 @@ ex3.printStackTrace();
      * containing this class.
      */
     private static void loadLibraryFullPath(String libraryName) {
-System.err.println("[NLL] libdir = "+libDir);
         try {
             if (libDir == null) {
                 // Get the URL for this class, if it is a jar URL, then get the
@@ -203,13 +198,10 @@ System.err.println("[NLL] libdir = "+libDir);
                     libSuffix = ".so";
                 }
             }
-System.err.println("LIBDIR = "+libDir);
             File libFile = new File(libDir, libPrefix + libraryName + libSuffix);
             String libFileName = libFile.getCanonicalPath();
-System.err.println("LOADING from file "+libFileName);
             try {
                 System.load(libFileName);
-System.err.println("LOADED from file "+libFileName);
                 if (verbose) {
                     System.err.println("Loaded " + libFile.getAbsolutePath()
                             + " from relative path");

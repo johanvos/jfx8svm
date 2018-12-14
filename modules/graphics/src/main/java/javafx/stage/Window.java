@@ -833,7 +833,6 @@ public class Window implements EventTarget {
             }
 
             if (!oldVisible && newVisible) {
-System.err.println(Thread.currentThread()+" [SHOWING] will fire event");
                 fireEvent(new WindowEvent(Window.this, WindowEvent.WINDOW_SHOWING));
             } else {
                 fireEvent(new WindowEvent(Window.this, WindowEvent.WINDOW_HIDING));
@@ -841,10 +840,6 @@ System.err.println(Thread.currentThread()+" [SHOWING] will fire event");
 
             oldVisible = newVisible;
             impl_visibleChanging(newVisible);
-try {
-System.err.println("[JVDBG] showsleep 1");
-Thread.sleep(2000);
-System.err.println("[JVDBG] showsleep 1 done");
             if (newVisible) {
                 hasBeenVisible = true;
                 windowQueue.add(Window.this);
@@ -852,7 +847,6 @@ System.err.println("[JVDBG] showsleep 1 done");
                 windowQueue.remove(Window.this);
             }
             Toolkit tk = Toolkit.getToolkit();
-System.err.println("[JVDBG] impl_peer = "+impl_peer);
             if (impl_peer != null) {
                 if (newVisible) {
                     if (peerListener == null) {
@@ -889,14 +883,8 @@ System.err.println("[JVDBG] impl_peer = "+impl_peer);
                     applyBounds();
 
                     impl_peer.setOpacity((float)getOpacity());
-System.err.println("[JVDBG] showsleep 2");
-Thread.sleep(2000);
-System.err.println("[JVDBG] showsleep 2 done");
 
                     impl_peer.setVisible(true);
-System.err.println("[JVDBG] showsleep 3");
-Thread.sleep(2000);
-System.err.println("[JVDBG] showsleep 3 done");
                     fireEvent(new WindowEvent(Window.this, WindowEvent.WINDOW_SHOWN));
                 } else {
                     impl_peer.setVisible(false);
@@ -935,12 +923,6 @@ System.err.println("[JVDBG] showsleep 3 done");
                 // Reset the flag unconditionally upon visibility changes
                 sizeToScene = false;
             }
-System.err.println("[JVDBG] showsleep 4");
-Thread.sleep(2000);
-System.err.println("[JVDBG] showsleep 4 done");
-} catch (Exception e) {
-e.printStackTrace();
-}
         }
 
         @Override

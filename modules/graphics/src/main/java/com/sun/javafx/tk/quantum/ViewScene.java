@@ -146,6 +146,7 @@ System.err.println("[JVDBG] ViewScene sets stage, creates painter: "+painter);
     }
 
     @Override void repaint() {
+System.err.println("REPAINT");
         if (platformView == null) {
             return;
         }
@@ -156,6 +157,7 @@ if (paintRenderJob == null) {
 }
             Toolkit tk = Toolkit.getToolkit();
             tk.addRenderJob(paintRenderJob);
+System.err.println("REPAINT returns");
         }
     }
 
