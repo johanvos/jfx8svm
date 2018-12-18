@@ -46,6 +46,13 @@ static volatile jobject glassClassLoader = NULL;
  */
 + (jclass)ClassForName:(char*)className withEnv:(JNIEnv*)env
 {
+/*
+    jclass answer = (*env)->FindClass(env, className);
+if (answer != NULL) {
+    return answer;
+}
+*/
+
     static jclass classCls = NULL;
     if (classCls == NULL)
     {

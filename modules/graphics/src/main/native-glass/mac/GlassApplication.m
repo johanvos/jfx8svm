@@ -804,24 +804,27 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacApplication__1initIDs
 
     jApplicationClass = (*env)->NewGlobalRef(env, jClass);
 
+    jclass jParentClass = (*env)->FindClass(env, "com/sun/glass/ui/Application");
+    jApplicationParentClass = (*env)->NewGlobalRef(env, jParentClass);
+
     javaIDs.Application.createPixels = (*env)->GetStaticMethodID(
-            env, jClass, "createPixels", "(II[IF)Lcom/sun/glass/ui/Pixels;");
+            env, jParentClass, "createPixels", "(II[IF)Lcom/sun/glass/ui/Pixels;");
     if ((*env)->ExceptionCheck(env)) return;
 
     javaIDs.Application.getScaleFactor = (*env)->GetStaticMethodID(
-            env, jClass, "getScaleFactor", "(IIII)F");
+            env, jParentClass, "getScaleFactor", "(IIII)F");
     if ((*env)->ExceptionCheck(env)) return;
 
     javaIDs.Application.reportException = (*env)->GetStaticMethodID(
-            env, jClass, "reportException", "(Ljava/lang/Throwable;)V");
+            env, jParentClass, "reportException", "(Ljava/lang/Throwable;)V");
     if ((*env)->ExceptionCheck(env)) return;
 
     javaIDs.Application.enterNestedEventLoop = (*env)->GetStaticMethodID(
-            env, jClass, "enterNestedEventLoop", "()Ljava/lang/Object;");
+            env, jParentClass, "enterNestedEventLoop", "()Ljava/lang/Object;");
     if ((*env)->ExceptionCheck(env)) return;
 
     javaIDs.Application.leaveNestedEventLoop = (*env)->GetStaticMethodID(
-            env, jClass, "leaveNestedEventLoop", "(Ljava/lang/Object;)V");
+            env, jParentClass, "leaveNestedEventLoop", "(Ljava/lang/Object;)V");
     if ((*env)->ExceptionCheck(env)) return;
 
     javaIDs.MacApplication.notifyApplicationDidTerminate = (*env)->GetMethodID(

@@ -37,6 +37,7 @@ JavaVM *jVM = NULL;
 JNIEnv *jEnv = NULL;
 
 jclass jApplicationClass = NULL;
+jclass jApplicationParentClass = NULL;
 jclass jWindowClass = NULL;
 jclass jViewClass = NULL;
 

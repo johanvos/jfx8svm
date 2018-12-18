@@ -73,8 +73,10 @@
 JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacCursor__1initIDs
 (JNIEnv *env, jclass jCursorClass)
 {
+fprintf(stderr, "[JVDBG] MACCURSOR, INITIDS\n");
     if (jSizeInit == NULL)
     {
+fprintf(stderr, "[JVDBG] MACCURSOR, INITIDS 2 \n");
         jSizeInit = (*env)->GetMethodID(env, [GlassHelper ClassForName:"com.sun.glass.ui.Size" withEnv:env], "<init>", "(II)V");
     }
 }

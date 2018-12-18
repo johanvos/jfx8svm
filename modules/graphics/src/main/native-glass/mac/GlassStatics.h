@@ -35,6 +35,7 @@ extern JavaVM *jVM;
 extern JNIEnv *jEnv;
 
 extern jclass jApplicationClass;
+extern jclass jApplicationParentClass;
 extern jclass jWindowClass;
 extern jclass jViewClass;
 
