@@ -184,11 +184,11 @@ MAC.launcherlibrary.ccFlags = [
         "-c",
         ccBaseFlags,
         IS_DEBUG_NATIVE ? ["-DDEBUG", "-O0"] : ["-O3", "-DNDEBUG"]].flatten()
-    MAC.launcherlibrary.ccFlags += "-stdlib=libstdc++"
+    MAC.launcherlibrary.ccFlags += "-stdlib=libc++"
 MAC.launcherlibrary.linker = linker
 MAC.launcherlibrary.linkFlags = ["-ldl", "-dynamiclib",
         "-framework", "Cocoa",
-        "-stdlib=libstdc++"]
+        "-stdlib=libc++"]
 
 MAC.iio = [:]
 MAC.iio.javahInclude = ["com/sun/javafx/iio/**/*"]
