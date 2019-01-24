@@ -41,7 +41,7 @@
 #import "ProcessInfo.h"
 #import <Security/SecRequirement.h>
 
-//#define VERBOSE
+#define VERBOSE
 #ifndef VERBOSE
     #define LOG(MSG, ...)
 #else
@@ -449,6 +449,7 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 
 - (void)runLoop:(id)selector
 {
+    fprintf(stderr, "native javafx glassapp, enter runLoop\n");
     LOG("GlassApplication:runLoop ENTER");
 
     NSAutoreleasePool *pool1 = [[NSAutoreleasePool alloc] init];
@@ -798,6 +799,7 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacApplication__1initIDs
 (JNIEnv *env, jclass jClass, jboolean jDisableSyncRendering)
 {
+    fprintf(stderr, "macinitid, Java_com_sun_glass_ui_mac_MacApplication__1initIDs\n");
     LOG("Java_com_sun_glass_ui_mac_MacApplication__1initIDs");
 
     disableSyncRendering = jDisableSyncRendering ? YES : NO;
@@ -827,9 +829,12 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacApplication__1initIDs
             env, jParentClass, "leaveNestedEventLoop", "(Ljava/lang/Object;)V");
     if ((*env)->ExceptionCheck(env)) return;
 
+    fprintf(stderr, "macinitid 2\n");
+
     javaIDs.MacApplication.notifyApplicationDidTerminate = (*env)->GetMethodID(
             env, jClass, "notifyApplicationDidTerminate", "()V");
     if ((*env)->ExceptionCheck(env)) return;
+    fprintf(stderr, "macinitid 3\n");
 
     if (jRunnableRun == NULL)
     {

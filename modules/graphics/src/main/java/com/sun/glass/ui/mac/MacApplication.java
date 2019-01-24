@@ -40,6 +40,7 @@ final class MacApplication extends Application implements InvokeLaterDispatcher.
 
     private native static void _initIDs(boolean disableSyncRendering);
     static {
+/*
         AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
             Application.loadNativeLibrary();
             return null;
@@ -48,6 +49,7 @@ final class MacApplication extends Application implements InvokeLaterDispatcher.
                 .doPrivileged((PrivilegedAction<Boolean>) () ->
                         Boolean.getBoolean("glass.disableSyncRendering"));
         _initIDs(disableSyncRendering);
+*/
     }
 
     native static int _getMacKey(int code);
@@ -56,6 +58,15 @@ final class MacApplication extends Application implements InvokeLaterDispatcher.
     private final InvokeLaterDispatcher invokeLaterDispatcher;
 
     MacApplication() {
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            Application.loadNativeLibrary();
+            return null;
+        });
+        boolean disableSyncRendering = AccessController
+                .doPrivileged((PrivilegedAction<Boolean>) () ->
+                        Boolean.getBoolean("glass.disableSyncRendering"));
+        _initIDs(disableSyncRendering);
+
         // Embedded in SWT, with shared event thread
         boolean isEventThread = AccessController
                 .doPrivileged((PrivilegedAction<Boolean>) () -> Boolean.getBoolean("javafx.embed.isEventThread"));
@@ -91,7 +102,7 @@ final class MacApplication extends Application implements InvokeLaterDispatcher.
         super.finishTerminating();
     }
 
-    private void notifyApplicationDidTerminate() {
+    public void notifyApplicationDidTerminate() {
         setEventThread(null);
     }
 

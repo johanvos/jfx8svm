@@ -251,8 +251,8 @@ System.err.println("TFF = "+theFontFactory);
 System.out.println("Class = "+clazz);
             Method mid = clazz.getMethod("getFactory", (Class[])null);
 System.out.println("mid = "+mid);
-return com.sun.javafx.font.freetype.FTFactory.getFactory();
-            // return (PrismFontFactory)mid.invoke(null);
+// return com.sun.javafx.font.freetype.FTFactory.getFactory();
+             return (PrismFontFactory)mid.invoke(null);
         } catch (Throwable t) {
             if (debugFonts) {
                 System.err.println("Loading font factory failed "+ factoryClass);
