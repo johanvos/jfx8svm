@@ -104,7 +104,10 @@ if (answer != NULL) {
     if (_ApplicationClass == NULL)
     {
         GET_MAIN_JENV;
-        _ApplicationClass = (*env)->NewGlobalRef(env, [GlassHelper ClassForName:"com.sun.glass.ui.Application" withEnv:env]);
+        // _ApplicationClass = (*env)->NewGlobalRef(env, [GlassHelper ClassForName:"com.sun.glass.ui.Application" withEnv:env]);
+        // _ApplicationClass = (*env)->NewGlobalRef(env, (*env)->FindClass(env, "com/sun/glass/ui/mac/MacApplication"));
+        _ApplicationClass = (*env)->NewGlobalRef(env, (*env)->FindClass(env, "com/sun/glass/ui/Application"));
+
         GLASS_CHECK_EXCEPTION(env);
     }
     if (_ApplicationClass == NULL)

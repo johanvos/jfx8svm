@@ -452,7 +452,8 @@ jclass classForName(JNIEnv *env, char *className)
     {
         if (self.jLaunchable != NULL)
         {
-            jclass runnableClass = classForName(jEnv, "java.lang.Runnable");
+            // jclass runnableClass = classForName(jEnv, "java.lang.Runnable");
+            jclass runnableClass = (*env)->NewGlobalRef(env, (*env)->FindClass(env, "java/lang/Runnable"));
             if ((*jEnv)->ExceptionCheck(jEnv) == JNI_TRUE)
             {
                 (*jEnv)->ExceptionDescribe(jEnv);
@@ -515,7 +516,9 @@ jclass classForName(JNIEnv *env, char *className)
             GLASS_CHECK_EXCEPTION(jEnv);
 
             // Load IosApplication class using the glass classloader
-            jclass cls = [GlassHelper ClassForName:"com.sun.glass.ui.ios.IosApplication" withEnv:jEnv];
+            // jclass cls = [GlassHelper ClassForName:"com.sun.glass.ui.ios.IosApplication" withEnv:jEnv];
+            jclass cls = (*env)->NewGlobalRef(env, (*env)->FindClass(env, "com/sun/glass/ui/ios/IosApplication"));
+
             if (!cls)
             {
                 NSLog(@"ERROR: can't find the IosApplication class");

@@ -59,6 +59,7 @@ static BOOL disableSyncRendering = NO;
 
 jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 {
+    fprintf(stderr, "jnionload\n");
     pthread_key_create(&GlassThreadDataKey, NULL);
 
     memset(&javaIDs, 0, sizeof(javaIDs));
@@ -88,6 +89,7 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 
 - (void)run
 {
+fprintf(stderr, "RUNINSEL2\n");
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     {
         assert(pthread_main_np() == 1);
@@ -160,6 +162,7 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
+fprintf(stderr, "RUNINSEL1\n");
     LOG("GlassApplication:applicationWillFinishLaunching");
 
     GET_MAIN_JENV;
@@ -167,7 +170,9 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
     {
         if (self->jLaunchable != NULL)
         {
-            jclass runnableClass = [GlassHelper ClassForName:"java.lang.Runnable" withEnv:jEnv];
+            // jclass runnableClass = [GlassHelper ClassForName:"java.lang.Runnable" withEnv:jEnv];
+            jclass runnableClass = (*env)->NewGlobalRef(env, (*env)->FindClass(env, "java/lang/Runnable"));
+
             if ((*env)->ExceptionCheck(env) == JNI_TRUE)
             {
                 (*env)->ExceptionDescribe(env);
@@ -468,7 +473,8 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
         GlassApplication *glassApp = (GlassApplication *)selector;
 
         // Load MacApplication class using the glass classloader
-        jclass cls = [GlassHelper ClassForName:"com.sun.glass.ui.mac.MacApplication" withEnv:jEnv];
+        // jclass cls = [GlassHelper ClassForName:"com.sun.glass.ui.mac.MacApplication" withEnv:jEnv];
+        jclass cls = (*jEnv)->NewGlobalRef(jEnv, (*jEnv)->FindClass(jEnv, "com/sun/glass/ui/mac/MacApplication"));
         if (!cls)
         {
             NSLog(@"ERROR: can't find the MacApplication class");
@@ -644,7 +650,9 @@ jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
             if ([NSThread isMainThread] == YES) {
                 [glassApp applicationWillFinishLaunching: NULL];
             } else {
+fprintf(stderr, "RUNONSEL1\n");
                 [glassApp performSelectorOnMainThread:@selector(applicationWillFinishLaunching:) withObject:NULL waitUntilDone:NO];
+fprintf(stderr, "RUNONSEL1 done\n");
             }
             GLASS_CHECK_EXCEPTION(jEnv);
 
@@ -831,9 +839,9 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacApplication__1initIDs
 
     fprintf(stderr, "macinitid 2\n");
 
-    javaIDs.MacApplication.notifyApplicationDidTerminate = (*env)->GetMethodID(
-            env, jClass, "notifyApplicationDidTerminate", "()V");
-    if ((*env)->ExceptionCheck(env)) return;
+    // javaIDs.MacApplication.notifyApplicationDidTerminate = (*env)->GetMethodID(
+            // env, jClass, "notifyApplicationDidTerminate", "()V");
+    // if ((*env)->ExceptionCheck(env)) return;
     fprintf(stderr, "macinitid 3\n");
 
     if (jRunnableRun == NULL)
@@ -871,10 +879,13 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacApplication__1runLoop
         }
 
         GlassApplication *glass = [[GlassApplication alloc] initWithEnv:env application:japplication launchable:jlaunchable taskbarApplication:isTaskbarApplication classLoader:classLoader];
+fprintf(stderr, "SELFTHREAD = %p\n",pthread_self());
         if ([NSThread isMainThread] == YES) {
             [glass runLoop: glass];
         } else {
+fprintf(stderr, "RUNONSEL2\n");
             [glass performSelectorOnMainThread:@selector(runLoop:) withObject:glass waitUntilDone:[NSThread isMainThread]];
+fprintf(stderr, "RUNONSEL2 DONE\n");
 
             // wait for Cocoa to enter its UI runloop
             while ([glass started] == NO)
@@ -981,7 +992,9 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacApplication__1submitForLater
     if (jEnv != NULL)
     {
         GlassRunnable *runnable = [[GlassRunnable alloc] initWithRunnable:(*env)->NewGlobalRef(env, jRunnable)];
+fprintf(stderr, "RUNONSEL3\n");
         [runnable performSelectorOnMainThread:@selector(run) withObject:nil waitUntilDone:NO];
+fprintf(stderr, "RUNONSEL3 DONE\n");
     }
 }
 
@@ -999,7 +1012,9 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacApplication__1invokeAndWait
     if (jEnv != NULL)
     {
         GlassRunnable *runnable = [[GlassRunnable alloc] initWithRunnable:(*env)->NewGlobalRef(env, jRunnable)];
+fprintf(stderr, "RUNONSEL4\n");
         [runnable performSelectorOnMainThread:@selector(run) withObject:nil waitUntilDone:YES];
+fprintf(stderr, "RUNONSEL4 DONE\n");
     }
 }
 
