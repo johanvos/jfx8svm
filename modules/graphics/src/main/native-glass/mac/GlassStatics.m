@@ -39,7 +39,9 @@ JNIEnv *jEnv = NULL;
 jclass jApplicationClass = NULL;
 jclass jApplicationParentClass = NULL;
 jclass jWindowClass = NULL;
+jclass jWindowParentClass = NULL;
 jclass jViewClass = NULL;
+jclass jViewParentClass = NULL;
 
 jclass jScreenClass = NULL;
 jclass jMenuBarDelegateClass = NULL;

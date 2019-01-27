@@ -125,7 +125,7 @@ final class MacWindow extends Window {
     @Override native protected int _getEmbeddedX(long ptr);
     @Override native protected int _getEmbeddedY(long ptr);
 
-    protected void notifyMove(final int x, final int y, boolean isMaximized) {
+    public void notifyMove(final int x, final int y, boolean isMaximized) {
         if (isMaximized() != isMaximized && !isMinimized()) {
             setState(isMaximized ? State.MAXIMIZED : State.NORMAL);
             handleWindowEvent(System.nanoTime(),

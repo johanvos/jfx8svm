@@ -641,6 +641,11 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacWindow__1initIDs
         jWindowClass = (*env)->NewGlobalRef(env, jClass);
     }
 
+    if (jWindowParentClass == NULL)
+    {
+        jWindowParentClass = (*env)->NewGlobalRef(env, ((*env)->FindClass(env, "com/sun/glass/ui/Window")));
+    }
+
     if (jMenuBarDelegateClass == NULL)
     {
         jMenuBarDelegateClass = (*env)->NewGlobalRef(env, [GlassHelper ClassForName:"com.sun.glass.ui.mac.MacMenuBarDelegate" withEnv:env]);
@@ -664,49 +669,49 @@ JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacWindow__1initIDs
 
     if (jWindowNotifyResize == NULL)
     {
-        jWindowNotifyResize = (*env)->GetMethodID(env, jWindowClass, "notifyResize", "(III)V");
+        jWindowNotifyResize = (*env)->GetMethodID(env, jWindowParentClass, "notifyResize", "(III)V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jWindowNotifyMoveToAnotherScreen == NULL)
     {
-        jWindowNotifyMoveToAnotherScreen = (*env)->GetMethodID(env, jWindowClass, "notifyMoveToAnotherScreen", "(Lcom/sun/glass/ui/Screen;)V");
+        jWindowNotifyMoveToAnotherScreen = (*env)->GetMethodID(env, jWindowParentClass, "notifyMoveToAnotherScreen", "(Lcom/sun/glass/ui/Screen;)V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jWindowNotifyClose == NULL)
     {
-        jWindowNotifyClose = (*env)->GetMethodID(env, jWindowClass, "notifyClose", "()V");
+        jWindowNotifyClose = (*env)->GetMethodID(env, jWindowParentClass, "notifyClose", "()V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jWindowNotifyFocus == NULL)
     {
-        jWindowNotifyFocus = (*env)->GetMethodID(env, jWindowClass, "notifyFocus", "(I)V");
+        jWindowNotifyFocus = (*env)->GetMethodID(env, jWindowParentClass, "notifyFocus", "(I)V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jWindowNotifyFocusUngrab == NULL)
     {
-        jWindowNotifyFocusUngrab = (*env)->GetMethodID(env, jWindowClass, "notifyFocusUngrab", "()V");
+        jWindowNotifyFocusUngrab = (*env)->GetMethodID(env, jWindowParentClass, "notifyFocusUngrab", "()V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jWindowNotifyFocusDisabled == NULL)
     {
-        jWindowNotifyFocusDisabled = (*env)->GetMethodID(env, jWindowClass, "notifyFocusDisabled", "()V");
+        jWindowNotifyFocusDisabled = (*env)->GetMethodID(env, jWindowParentClass, "notifyFocusDisabled", "()V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jWindowNotifyDestroy == NULL)
     {
-        jWindowNotifyDestroy = (*env)->GetMethodID(env, jWindowClass, "notifyDestroy", "()V");
+        jWindowNotifyDestroy = (*env)->GetMethodID(env, jWindowParentClass, "notifyDestroy", "()V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jWindowNotifyDelegatePtr == NULL)
     {
-        jWindowNotifyDelegatePtr = (*env)->GetMethodID(env, jWindowClass, "notifyDelegatePtr", "(J)V");
+        jWindowNotifyDelegatePtr = (*env)->GetMethodID(env, jWindowParentClass, "notifyDelegatePtr", "(J)V");
     }
 }
 

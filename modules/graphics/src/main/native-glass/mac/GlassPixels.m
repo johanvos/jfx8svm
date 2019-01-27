@@ -49,7 +49,9 @@ JNIEXPORT jint JNICALL Java_com_sun_glass_ui_mac_MacPixels__1initIDs
 
     if (jPixelsAttachData == NULL)
     {
-        jPixelsAttachData =  (*env)->GetMethodID(env, jClass, "attachData", "(J)V");
+        // jPixelsAttachData =  (*env)->GetMethodID(env, jClass, "attachData", "(J)V");
+        jclass parentClass = (*env)->FindClass(env, "com/sun/glass/ui/Pixels");
+        jPixelsAttachData =  (*env)->GetMethodID(env, parentClass, "attachData", "(J)V");
     }
 
     // http://developer.apple.com/library/mac/#documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/opengl_designstrategies/opengl_designstrategies.html%23//apple_ref/doc/uid/TP40001987-CH2-SW17
