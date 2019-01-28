@@ -77,6 +77,7 @@ static inline NSView<GlassView>* getGlassView(JNIEnv *env, jlong jPtr)
 JNIEXPORT void JNICALL Java_com_sun_glass_ui_mac_MacView__1initIDs
 (JNIEnv *env, jclass jClass)
 {
+fprintf(stderr, "macviewinit 0\n");
     LOG("Java_com_sun_glass_ui_mac_MacView__1initIDs");
 fprintf(stderr, "macviewinit 1\n");
 
@@ -157,54 +158,55 @@ fprintf(stderr, "macviewinit 5\n");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
+fprintf(stderr, "macviewinit 5b\n");
     if (jViewNotifyInputMethodMac == NULL)
     {
-        jclass jMacViewClass = [GlassHelper ClassForName:"com.sun.glass.ui.mac.MacView" withEnv:env];
-        jViewNotifyInputMethodMac = (*env)->GetMethodID(env, jMacViewClass, "notifyInputMethodMac", "(Ljava/lang/String;IIIII)V");
+        // jclass jMacViewClass = [GlassHelper ClassForName:"com.sun.glass.ui.mac.MacView" withEnv:env];
+        jViewNotifyInputMethodMac = (*env)->GetMethodID(env, jViewClass, "notifyInputMethodMac", "(Ljava/lang/String;IIIII)V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 fprintf(stderr, "macviewinit 6\n");
 
     if(jViewNotifyInputMethodCandidatePosRequest == NULL)
     {
-        jViewNotifyInputMethodCandidatePosRequest = (*env)->GetMethodID(env, jViewClass, "notifyInputMethodCandidatePosRequest", "(I)[D");
+        jViewNotifyInputMethodCandidatePosRequest = (*env)->GetMethodID(env, jViewParentClass, "notifyInputMethodCandidatePosRequest", "(I)[D");
         if ((*env)->ExceptionCheck(env)) return;
     }
 fprintf(stderr, "macviewinit 7\n");
 
     if (jViewNotifyDragEnter == NULL)
     {
-        jViewNotifyDragEnter = (*env)->GetMethodID(env, jViewClass, "notifyDragEnter", "(IIIII)I");
+        jViewNotifyDragEnter = (*env)->GetMethodID(env, jViewParentClass, "notifyDragEnter", "(IIIII)I");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jViewNotifyDragOver == NULL)
     {
-        jViewNotifyDragOver = (*env)->GetMethodID(env, jViewClass, "notifyDragOver", "(IIIII)I");
+        jViewNotifyDragOver = (*env)->GetMethodID(env, jViewParentClass, "notifyDragOver", "(IIIII)I");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jViewNotifyDragLeave == NULL)
     {
-        jViewNotifyDragLeave = (*env)->GetMethodID(env, jViewClass, "notifyDragLeave", "()V");
+        jViewNotifyDragLeave = (*env)->GetMethodID(env, jViewParentClass, "notifyDragLeave", "()V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jViewNotifyDragDrop == NULL)
     {
-        jViewNotifyDragDrop = (*env)->GetMethodID(env, jViewClass, "notifyDragDrop", "(IIIII)I");
+        jViewNotifyDragDrop = (*env)->GetMethodID(env, jViewParentClass, "notifyDragDrop", "(IIIII)I");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jViewNotifyDragEnd == NULL)
     {
-        jViewNotifyDragEnd = (*env)->GetMethodID(env, jViewClass, "notifyDragEnd", "(I)V");
+        jViewNotifyDragEnd = (*env)->GetMethodID(env, jViewParentClass, "notifyDragEnd", "(I)V");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
     if (jViewGetAccessible == NULL)
     {
-        jViewGetAccessible = (*env)->GetMethodID(env, jViewClass, "getAccessible", "()J");
+        jViewGetAccessible = (*env)->GetMethodID(env, jViewParentClass, "getAccessible", "()J");
         if ((*env)->ExceptionCheck(env)) return;
     }
 
