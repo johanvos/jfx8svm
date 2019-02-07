@@ -52,6 +52,7 @@ public class PlatformUtil {
     private static String javafxPlatform;
 
     static {
+System.err.println("PLATFORMUTIL, os = "+os);
         javafxPlatform = AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty("javafx.platform"));
         loadProperties();
         embedded = AccessController.doPrivileged((PrivilegedAction<Boolean>) () -> Boolean.getBoolean("com.sun.javafx.isEmbedded"));
@@ -174,6 +175,7 @@ public class PlatformUtil {
      * Returns true if the operating system is iOS
      */
     public static boolean isIOS(){
+System.err.println("[PLATFORMUTIL, isIOS? "+IOS+" and osname = "+os);
         return IOS;
     }
 

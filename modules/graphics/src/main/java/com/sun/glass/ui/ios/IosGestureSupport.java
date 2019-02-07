@@ -35,7 +35,19 @@ final class IosGestureSupport {
 
     private native static void _initIDs();
     static {
+System.err.println("[IOSGESTURESUPPORT] clinit called");
+Thread.dumpStack();
         _initIDs();
+    }
+
+    static boolean loaded = false;
+
+    public static void ping() {
+System.err.println("[JVDBG] IOSGESTURES ping, loaded = "+loaded);
+        if (!loaded) {
+            _initIDs();
+        }
+        loaded = true;
     }
 
     // The multiplier used to convert scroll units to pixels

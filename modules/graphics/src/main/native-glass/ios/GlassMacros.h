@@ -100,6 +100,7 @@ do {                                                                            
     GlassThreadData *_GlassThreadData = (GlassThreadData*)pthread_getspecific(GlassThreadDataKey); \
     GLASS_POOL_EXIT
 
+#define MAT_IOS_DEBUG 1
 #if MAT_IOS_DEBUG
 
 #define GLASS_LOG(fmt, ...) NSLog((@"%s [line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);

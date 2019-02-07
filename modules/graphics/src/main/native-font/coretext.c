@@ -159,6 +159,7 @@ CGPoint_FID_CACHE CGPointFc;
 
 void cacheCGPointFields(JNIEnv *env)
 {
+fprintf(stderr, "CacheCGPointFields1\n");
     if (CGPointFc.cached) return;
     jclass tmpClass = (*env)->FindClass(env, "com/sun/javafx/font/coretext/CGPoint");
     if (checkAndClearException(env) || !tmpClass) {
@@ -182,13 +183,16 @@ void cacheCGPointFields(JNIEnv *env)
         return;
     }
     CGPointFc.cached = 1;
+fprintf(stderr, "CacheCGPointFields2\n");
 }
 
 CGPoint *getCGPointFields(JNIEnv *env, jobject lpObject, CGPoint *lpStruct)
 {
+fprintf(stderr, "GETCGPointFields0\n");
     if (!CGPointFc.cached) cacheCGPointFields(env);
     lpStruct->x = (*env)->GetDoubleField(env, lpObject, CGPointFc.x);
     lpStruct->y = (*env)->GetDoubleField(env, lpObject, CGPointFc.y);
+fprintf(stderr, "GETCGPointFields1\n");
     return lpStruct;
 }
 
@@ -306,6 +310,7 @@ void cacheCGRectFields(JNIEnv *env)
 
 CGRect *getCGRectFields(JNIEnv *env, jobject lpObject, CGRect *lpStruct)
 {
+fprintf(stderr, "[JVDBG] GETCGRECTF0\n");
     if (!CGRectFc.cached) cacheCGRectFields(env);
     {
     jobject lpObject1 = (*env)->GetObjectField(env, lpObject, CGRectFc.origin);
@@ -315,6 +320,7 @@ CGRect *getCGRectFields(JNIEnv *env, jobject lpObject, CGRect *lpStruct)
     jobject lpObject1 = (*env)->GetObjectField(env, lpObject, CGRectFc.size);
     if (lpObject1 != NULL) getCGSizeFields(env, lpObject1, &lpStruct->size);
     }
+fprintf(stderr, "[JVDBG] GETCGRECTF1\n");
     return lpStruct;
 }
 
@@ -436,6 +442,7 @@ JNIEXPORT void JNICALL OS_NATIVE(CGPathRelease)
 JNIEXPORT jlong JNICALL OS_NATIVE(CGColorSpaceCreateDeviceRGB)
     (JNIEnv *env, jclass that)
 {
+fprintf(stderr, "[JVDBG] CGColorSpaceCreateDeviceRGB\n\n\n\n");
     return (jlong)CGColorSpaceCreateDeviceRGB();
 }
 
@@ -448,7 +455,19 @@ JNIEXPORT jlong JNICALL OS_NATIVE(CGColorSpaceCreateDeviceGray)
 JNIEXPORT jlong JNICALL OS_NATIVE(CGBitmapContextCreate)
     (JNIEnv *env, jclass that, jlong arg0, jlong arg1, jlong arg2, jlong arg3, jlong arg4, jlong arg5, jint arg6)
 {
-    return (jlong)CGBitmapContextCreate((void*)arg0, (size_t)arg1, (size_t)arg2, (size_t)arg3, (size_t)arg4, (CGColorSpaceRef)arg5, (CGBitmapInfo)arg6);
+fprintf(stderr, "[JVDBG] native CGBitmapContextCreate\n");
+fprintf(stderr, "[JVDBG] function at %p\n",CGBitmapContextCreate);
+fprintf(stderr, "[JVDGG] args = %ld, %ld, %ld, %ld, %ld, %ld, %d\n",arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+CGColorSpaceRef  ref = (CGColorSpaceRef)arg5;
+CGColorSpaceRef realclr =     CGColorSpaceCreateDeviceRGB();
+
+CGBitmapInfo info = (CGBitmapInfo)arg6;
+fprintf(stderr, "[JVDBG] ref = %p\n", ref);
+fprintf(stderr, "[JVDBG] info = %p\n", info);
+    jlong answer = (jlong)CGBitmapContextCreate((void*)arg0, (size_t)arg1, (size_t)arg2, (size_t)arg3, (size_t)arg4, (CGColorSpaceRef)arg5, (CGBitmapInfo)arg6);
+    // jlong answer = (jlong)CGBitmapContextCreate((void*)arg0, (size_t)arg1, (size_t)arg2, (size_t)arg3, (size_t)arg4, realclr, (CGBitmapInfo)arg6);
+fprintf(stderr, "[JVDBG] native CGBitmapContextCreate will return %ld\n", answer);
+return answer;
 }
 
 JNIEXPORT void JNICALL OS_NATIVE(CGContextSetAllowsFontSmoothing)
@@ -484,10 +503,15 @@ JNIEXPORT void JNICALL OS_NATIVE(CGContextSetRGBFillColor)
 JNIEXPORT void JNICALL OS_NATIVE(CGContextFillRect)
     (JNIEnv *env, jclass that, jlong arg0, jobject arg1)
 {
+fprintf(stderr, "OSNATIVE CALLED\n");
     CGRect _arg1, *lparg1=NULL;
     /* In Only */
-    if (arg1) if ((lparg1 = getCGRectFields(env, arg1, &_arg1)) == NULL) return;
+    if (arg1) if ((lparg1 = getCGRectFields(env, arg1, &_arg1)) == NULL) {
+fprintf(stderr, "OSNATIVE will return1\n");
+        return;
+    }
     CGContextFillRect((CGContextRef)arg0, *lparg1);
+fprintf(stderr, "OSNATIVE will return 2\n");
 }
 
 JNIEXPORT void JNICALL OS_NATIVE(CGContextTranslateCTM)
@@ -817,15 +841,19 @@ JNIEXPORT jbyteArray JNICALL OS_NATIVE(CGBitmapContextGetData)
 JNIEXPORT void JNICALL OS_NATIVE(CGRectApplyAffineTransform)
     (JNIEnv *env, jclass that, jobject arg0, jobject arg1)
 {
+fprintf(stderr, "[JVDBG] OSNATIVE CALLED 0\n");
     CGRect _arg0, *lparg0=NULL;
     CGAffineTransform _arg1, *lparg1=NULL;
+fprintf(stderr, "[JVDBG] OSNATIVE CALLED 1\n");
     if (arg0) if ((lparg0 = getCGRectFields(env, arg0, &_arg0)) == NULL) goto fail;
     if (arg1) if ((lparg1 = getCGAffineTransformFields(env, arg1, &_arg1)) == NULL) goto fail;
     _arg0 = CGRectApplyAffineTransform(*lparg0, *lparg1);
+fprintf(stderr, "[JVDBG] OSNATIVE CALLED 2\n");
 fail:
     /* In Only */
 //    if (arg1 && lparg1) setCGAffineTransformFields(env, arg1, lparg1);
     if (arg0 && lparg0) setCGRectFields(env, arg0, lparg0);
+fprintf(stderr, "[JVDBG] OSNATIVE CALLED 3\n");
 }
 
 JNIEXPORT void JNICALL OS_NATIVE(CTFontDrawGlyphs)

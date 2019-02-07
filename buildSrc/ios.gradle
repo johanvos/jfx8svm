@@ -527,7 +527,7 @@ project(":web") {
             )
             destinationDir = file("modules/web/build/classes/ios")
             sourceSets.main.java.outputDir = destinationDir
-            dependencyCacheDir = file("modules/web/build/dependency-cache")
+            // dependencyCacheDir = file("modules/web/build/dependency-cache")
             source file("modules/web/src/ios/java")
             doLast {
                 copy {
@@ -553,12 +553,13 @@ project(":web") {
                              project(":graphics").sourceSets.main.java.outputDir,
                              project(":controls").sourceSets.main.java.outputDir)
 
+/*
         jfxrtIos {
             from ("modules/web/build/classes/ios", "modules/web/build/resources/main");
             exclude("com/sun/webkit", "com/sun/javafx/webkit");
         }
 
-        sdkIos  {
+        sdk  {
             dependsOn(jarWebJavaIos)
             doLast {
                 def props = project.ext["IOS"]
@@ -572,13 +573,14 @@ project(":web") {
                 }
             }
         }
+*/
     }
 }
 
 IOS.media = [:]
 IOS.media.lib = "jfxmedia"
-IOS.media.javahSource = files("modules/media/build/classes/main")
-IOS.media.javahClasspath = files("modules/media/build/classes/main")
+IOS.media.javahSource = files("modules/media/build/classes/java/main")
+IOS.media.javahClasspath = files("modules/media/build/classes/java/main")
 IOS.media.javahInclude = ["com/sun/media/jfxmediaimpl/*"]
 IOS.media.variants = ["arm", "arm64", "x86", "x86_64"];
 
@@ -621,7 +623,8 @@ project(":media") {
     afterEvaluate {
         addNative(project, "media")
 
-        sdkIos  {
+/*
+        sdk  {
             doLast {
                 def props = project.ext["IOS"]
                 copy {
@@ -634,6 +637,7 @@ project(":media") {
                 }
             }
         }
+*/
     }
 }
 
@@ -655,7 +659,8 @@ project(":extensions") {
         javahIosExtensions.classpath += files(project(":base").sourceSets.main.java.outputDir,
                              project(":graphics").sourceSets.main.java.outputDir)
 
-        sdkIos  {
+/*
+        sdk  {
             doLast {
                 def props = project.ext["IOS"]
                 copy {
@@ -668,5 +673,6 @@ project(":extensions") {
                 }
             }
         }
+*/
     }
 }

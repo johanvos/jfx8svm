@@ -77,7 +77,8 @@ fprintf(stderr, "[JVDBG] MACCURSOR, INITIDS\n");
     if (jSizeInit == NULL)
     {
 fprintf(stderr, "[JVDBG] MACCURSOR, INITIDS 2 \n");
-        jSizeInit = (*env)->GetMethodID(env, [GlassHelper ClassForName:"com.sun.glass.ui.Size" withEnv:env], "<init>", "(II)V");
+        // jSizeInit = (*env)->GetMethodID(env, [GlassHelper ClassForName:"com.sun.glass.ui.Size" withEnv:env], "<init>", "(II)V");
+        jSizeInit = (*env)->GetMethodID(env,  (*env)->FindClass(env, "com/sun/glass/ui/Size"), "<init>", "(II)V");
     }
 }
 

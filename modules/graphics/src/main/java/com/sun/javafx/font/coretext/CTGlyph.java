@@ -46,8 +46,8 @@ class CTGlyph implements Glyph {
     private static final int BITMAP_WIDTH = 256;
     private static final int BITMAP_HEIGHT = 256;
     private static final int MAX_SIZE = 320;
-    private static final long GRAY_COLORSPACE = OS.CGColorSpaceCreateDeviceGray();
-    private static final long RGB_COLORSPACE = OS.CGColorSpaceCreateDeviceRGB();
+    // private static final long GRAY_COLORSPACE = OS.CGColorSpaceCreateDeviceGray();
+    // private static final long RGB_COLORSPACE = OS.CGColorSpaceCreateDeviceRGB();
 
     CTGlyph(CTFontStrike strike, int glyphCode, boolean drawShapes) {
         this.strike = strike;
@@ -73,6 +73,7 @@ class CTGlyph implements Glyph {
     }
 
     private void checkBounds() {
+System.err.println("[JVDBG] in java, checkBounds0\n");
         if (bounds != null) return;
         bounds = new CGRect();
         if (strike.getSize() == 0) return;
@@ -98,8 +99,11 @@ class CTGlyph implements Glyph {
         bounds.size.width = (bb[2] - bb[0]);
         bounds.size.height = (bb[3] - bb[1]);
         if (strike.matrix != null) {
+Thread.dumpStack();
+System.err.println("[JVDBG] in java, checkBounds1\n");
             /* Need to use the native matrix as it is y up */
             OS.CGRectApplyAffineTransform(bounds, strike.matrix);
+System.err.println("[JVDBG] in java, checkBounds2\n");
         }
 
         if (bounds.size.width < 0 || bounds.size.height < 0 ||
@@ -117,6 +121,7 @@ class CTGlyph implements Glyph {
             bounds.size.width = (int)Math.ceil(bounds.size.width) + 1 + 1 + 1;
             bounds.size.height = (int)Math.ceil(bounds.size.height) + 1 + 1 + 1;
         }
+System.err.println("[JVDBG] in java, checkBounds3\n");
     }
 
     @Override public Shape getShape() {
@@ -124,24 +129,32 @@ class CTGlyph implements Glyph {
     }
 
     private long createContext(boolean lcd, int width, int height) {
+System.err.println("[JVDBG] createcontext, lcd = "+lcd+", width = "+width+", height = "+height);
         long space;
         int bpc = 8, bpr, flags;
         if (lcd) {
-            space = RGB_COLORSPACE;
+            space = OS.CGColorSpaceCreateDeviceRGB();
             bpr = width * 4;
             flags = OS.kCGBitmapByteOrder32Host | OS.kCGImageAlphaPremultipliedFirst;
         } else {
-            space = GRAY_COLORSPACE;
+            space = OS.CGColorSpaceCreateDeviceGray();
             bpr = width;
             flags = OS.kCGImageAlphaNone;
         }
+System.err.println("[JVDBG] createcontext 0");
         long context =  OS.CGBitmapContextCreate(0, width, height, bpc, bpr, space, flags);
+System.err.println("[JVDBG] createcontext 1");
 
         boolean subPixel = strike.isSubPixelGlyph();
+System.err.println("[JVDBG] createcontext 2");
         OS.CGContextSetAllowsFontSmoothing(context, lcd);
+System.err.println("[JVDBG] createcontext 3");
         OS.CGContextSetAllowsAntialiasing(context, true);
+System.err.println("[JVDBG] createcontext 4");
         OS.CGContextSetAllowsFontSubpixelPositioning(context, subPixel);
+System.err.println("[JVDBG] createcontext 5");
         OS.CGContextSetAllowsFontSubpixelQuantization(context, subPixel);
+System.err.println("[JVDBG] createcontext 6");
         return context;
 
     }
@@ -154,55 +167,78 @@ class CTGlyph implements Glyph {
     }
 
     private synchronized byte[] getImage(double x, double y, int w, int h, int subPixel) {
+System.err.println("[JVDBG] CTGlyph, getImage0");
 
         if (w == 0 || h == 0) return new byte[0];
+System.err.println("[JVDBG] CTGlyph, getImage1");
 
         long fontRef = strike.getFontRef();
+System.err.println("[JVDBG] CTGlyph, getImage2");
         boolean lcd = isLCDGlyph();
+System.err.println("[JVDBG] CTGlyph, getImage3");
         boolean lcdContext = LCD_CONTEXT || lcd;
         CGAffineTransform matrix = strike.matrix;
         boolean cache = CACHE_CONTEXT & BITMAP_WIDTH >= w & BITMAP_HEIGHT >= h;
+System.err.println("[JVDBG] CTGlyph, getImage4");
         long context = cache ? getCachedContext(lcdContext) :
                                createContext(lcdContext, w, h);
         if (context == 0) return new byte[0];
+System.err.println("[JVDBG] CTGlyph, getImage5");
 
         /* Fill background with white */
+System.err.println("[JVDBG] CTGlyph, getImage6");
         OS.CGContextSetRGBFillColor(context, 1, 1, 1, 1);
+System.err.println("[JVDBG] CTGlyph, getImage7");
         CGRect rect = new CGRect();
         rect.size.width = w;
         rect.size.height = h;
+System.err.println("[JVDBG] CTGlyph, getImage8");
         OS.CGContextFillRect(context, rect);
+System.err.println("[JVDBG] CTGlyph, getImage9");
 
         double drawX = 0, drawY = 0;
         if (matrix != null) {
+System.err.println("[JVDBG] CTGlyph, getImage10");
             OS.CGContextTranslateCTM(context, -x, -y);
+System.err.println("[JVDBG] CTGlyph, getImage11");
         } else {
+System.err.println("[JVDBG] CTGlyph, getImage12");
             drawX = x - strike.getSubPixelPosition(subPixel);
+System.err.println("[JVDBG] CTGlyph, getImage13");
             drawY = y;
         }
 
         /* Draw the text with black */
+System.err.println("[JVDBG] CTGlyph, getImage14");
         OS.CGContextSetRGBFillColor(context, 0, 0, 0, 1);
+System.err.println("[JVDBG] CTGlyph, getImage15");
         OS.CTFontDrawGlyphs(fontRef, (short)glyphCode, -drawX, -drawY, context);
+System.err.println("[JVDBG] CTGlyph, getImage16");
 
         if (matrix != null) {
+System.err.println("[JVDBG] CTGlyph, getImage17");
             OS.CGContextTranslateCTM(context, x, y);
         }
 
         byte[] imageData;
         if (lcd) {
+System.err.println("[JVDBG] CTGlyph, getImage18");
             imageData = OS.CGBitmapContextGetData(context, w, h, 24);
         } else {
+System.err.println("[JVDBG] CTGlyph, getImage19");
             imageData = OS.CGBitmapContextGetData(context, w, h, 8);
         }
         if (imageData == null) {
+System.err.println("[JVDBG] CTGlyph, getImage20");
             bounds = new CGRect();
             imageData = new byte[0];
         }
 
         if (!cache) {
+System.err.println("[JVDBG] CTGlyph, getImage21");
             OS.CGContextRelease(context);
         }
+System.err.println("[JVDBG] CTGlyph, getImage22");
         return imageData;
     }
 
@@ -211,9 +247,13 @@ class CTGlyph implements Glyph {
     }
 
     @Override public byte[] getPixelData(int subPixel) {
+System.err.println("[JVDBG] ctglyph, getPixelData0");
         checkBounds();
-        return getImage(bounds.origin.x, bounds.origin.y,
+System.err.println("[JVDBG] ctglyph, getPixelData1");
+        byte[] answer = getImage(bounds.origin.x, bounds.origin.y,
                         (int)bounds.size.width, (int)bounds.size.height, subPixel);
+System.err.println("[JVDBG] ctglyph, getPixelData2");
+        return answer;
     }
 
     @Override public float getAdvance() {

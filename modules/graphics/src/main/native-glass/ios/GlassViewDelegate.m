@@ -117,7 +117,7 @@ static jint getTouchStateFromPhase(int phase)
         CGPoint viewPoint = [touch locationInView:self.uiView.superview];
 
         self.mouseTouch = touch;
-
+        
         //focus owning GlassWindow
         [self.uiView.superview.superview makeKeyWindow];
 
@@ -265,6 +265,7 @@ static jint getTouchStateFromPhase(int phase)
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+fprintf(stderr, "[JVDBG] native scrollViewDidScroll\n");
     if ([GlassDragDelegate isDragging] == YES) { // no gestures while dragging
         return;
     }
@@ -283,6 +284,7 @@ static jint getTouchStateFromPhase(int phase)
     point.x = lastScrollOffset.x - currOffset.x;
     point.y = lastScrollOffset.y - currOffset.y;
     lastScrollOffset = currOffset;
+fprintf(stderr, "[JVDBG] SVDS, gestclass = %p, method = %p\n", jGestureSupportClass,jGestureSupportScrollGesturePerformed);
 
     (*env)->CallStaticVoidMethod(env,
                                  jGestureSupportClass,
@@ -374,7 +376,7 @@ static jint getTouchStateFromPhase(int phase)
     if (self != nil)
     {
         GET_MAIN_JENV;
-
+        
         // Owner View
         self.uiView = view; // native side
         self.uiView.delegate = self;
@@ -397,7 +399,7 @@ static jint getTouchStateFromPhase(int phase)
             [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
         [pinchGesture setCancelsTouchesInView:NO];
         [pinchGesture setDelaysTouchesEnded:NO];
-        [pinchGesture setDelaysTouchesBegan:NO];
+        [pinchGesture setDelaysTouchesBegan:NO];        
         [self.uiView addGestureRecognizer:pinchGesture];
         [pinchGesture setDelegate:ggDelegate];
         [pinchGesture release];
@@ -544,37 +546,37 @@ static jint getTouchStateFromPhase(int phase)
 - (void)sendJavaKeyEventWithType:(int)type keyCode:(int)code chars:(char)chr modifiers:(int)modif;
 {
     GET_MAIN_JENV;
-
+    
     jchar jc[1] = {(jchar) chr};
     jcharArray jChars = (*env)->NewCharArray(env, 1);
     (*env)->SetCharArrayRegion(env, jChars, 0, 1, jc);
-
+    
     (*env)->CallVoidMethod(env, self.jView, mat_jViewNotifyKey, type, code, jChars, modif);
-
+    
     (*env)->DeleteLocalRef(env, jChars);
-
+    
     GLASS_CHECK_EXCEPTION(env);
 }
 
--(void) sendJavaInputMethodEvent:(NSString *) text clauseBoundary:(int[])clsBndr attrBoundary:(int[])attrBndr attrValue:(Byte[])attrVal
+-(void) sendJavaInputMethodEvent:(NSString *) text clauseBoundary:(int[])clsBndr attrBoundary:(int[])attrBndr attrValue:(Byte[])attrVal 
             committedTextLength:(int)cmtdTxtLen caretPos:(int)crtPos visiblePos:(int)visPos
 {
     GET_MAIN_JENV;
-
+    
     jsize buflen = [text length];
     unichar buffer[buflen];
     [text getCharacters:buffer];
     jstring textStr = (*env)->NewString(env, (jchar *)buffer, buflen);
-
+    
     jintArray clauseBoundaryArray = (*env)->NewIntArray(env, 0);
-
+    
     jintArray attrBoundaryArray = (*env)->NewIntArray(env, 0);
-
+    
     jbyteArray attrValueArray = (*env)->NewByteArray(env, 0);
-
-    (*env)->CallVoidMethod(env, self.jView, mat_jViewNotifyInputMethod, textStr, clauseBoundaryArray,
+    
+    (*env)->CallVoidMethod(env, self.jView, mat_jViewNotifyInputMethod, textStr, clauseBoundaryArray, 
                            attrBoundaryArray, attrValueArray, cmtdTxtLen, crtPos, visPos);
-
+    
     GLASS_CHECK_EXCEPTION(env);
 }
 
@@ -697,6 +699,25 @@ static BOOL isTouchEnded(int phase)
     return NO;
 }
 
+// UITextViewDelegate
+-(BOOL)textView:(UITextView *)textView
+        shouldChangeTextInRange:(NSRange)range
+        replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]) {
+        char c = (char)13;
+        if (range.length == 0) {
+            const char *cl = [text cStringUsingEncoding:NSUTF8StringEncoding];
+            c = cl[0];
+        }
+    [self sendJavaKeyEventWithType:com_sun_glass_events_KeyEvent_TYPED
+                                              keyCode:com_sun_glass_events_KeyEvent_VK_ENTER
+                                                chars:c
+                                            modifiers:0];
+    }
+    return YES;
+}
+
+
 #pragma mark --- UITextFieldDelegate
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -704,9 +725,13 @@ static BOOL isTouchEnded(int phase)
                                           keyCode:com_sun_glass_events_KeyEvent_VK_ENTER
                                             chars:(char)13
                                         modifiers:0];
-
+    
     [[GlassWindow getMasterWindow] resignFocusOwner];
+    
+    return YES;
+}
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return YES;
 }
 

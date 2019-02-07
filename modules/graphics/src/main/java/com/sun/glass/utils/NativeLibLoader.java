@@ -115,6 +115,8 @@ ex.printStackTrace();
                     }
                     return;
                 } catch (UnsatisfiedLinkError ex3) {
+System.err.println("[JVDBG] this failed too. ");
+ex3.printStackTrace();
                     // Fail silently and try the next directory in java.library.path
                 }
             }
@@ -123,6 +125,7 @@ ex.printStackTrace();
             // print a warning. If it fails, rethrow the exception from
             // the earlier System.load()
             try {
+System.err.println("[JVDBG] loadLibrary try for "+libraryName);
                 System.loadLibrary(libraryName);
                 if (verbose) {
                     System.err.println("WARNING: " + ex.toString());
@@ -130,6 +133,8 @@ ex.printStackTrace();
                             + libraryName + ") as a fallback");
                 }
             } catch (UnsatisfiedLinkError ex2) {
+System.err.println("[JVDBG] failed again: ");
+ex2.printStackTrace();
                 //On iOS we link all libraries staticaly. Presence of library
                 //is recognized by existence of JNI_OnLoad_libraryname() C function.
                 //If libraryname contains hyphen, it needs to be translated

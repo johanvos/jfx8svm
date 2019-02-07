@@ -226,17 +226,21 @@ System.err.println("FC = "+factoryClass);
 System.err.println("TFF = "+theFontFactory);
         if (theFontFactory == null) {
             if (useNativeRasterizer) {
+System.err.println("usenativerasterizer is true");
                 // If native failed use T2K (i.e. Windows Vista)
                 useNativeRasterizer = false;
                 factoryClass = T2K_FACTORY;
             } else {
+System.err.println("usenativerasterizer was false");
                 // If T2K failed use native (i.e. OpenJFX build)
                 useNativeRasterizer = true;
                 factoryClass = getNativeFactoryName();
             }
+System.err.println("and now, fc = "+factoryClass);
             if (factoryClass != null) {
                 theFontFactory = getFontFactory(factoryClass);
             }
+System.err.println("and now, ttf = "+theFontFactory);
             if (debugFonts) {
                 System.err.println("*** Loading primary font factory failed. ***");
                 System.err.println("*** Fallbacking to " + factoryClass  + " ***");

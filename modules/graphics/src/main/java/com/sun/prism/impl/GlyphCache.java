@@ -119,6 +119,7 @@ public class GlyphCache {
                        BaseTransform xform, BaseBounds clip) {
 
         int dstw, dsth;
+System.err.println("[JVDBG] GlyphCache, render0\n");
         if (isLCDCache) {
             dstw = ctx.getLCDBuffer().getPhysicalWidth();
             dsth = ctx.getLCDBuffer().getPhysicalHeight();
@@ -144,7 +145,10 @@ public class GlyphCache {
             }
             pt.setLocation(x + gl.getPosX(gi), y + gl.getPosY(gi));
             int subPixel = strike.getQuantizedPosition(pt);
+System.err.println("[JVDBG] GlyphCache, render1\n");
             GlyphData data = getCachedGlyph(gc, subPixel);
+System.err.println("[JVDBG] GlyphCache, render2\n");
+System.err.println("glyphdata = "+data);
             if (data != null) {
                 if (clip != null) {
                     // Always check clipping using user space.
@@ -168,10 +172,12 @@ public class GlyphCache {
                         }
                     }
                 }
+System.err.println("[JVDBG] GlyphCache, render3\n");
                 xform.transform(pt, pt);
                 addDataToQuad(data, vb, tex, pt.x, pt.y, dstw, dsth);
             }
         }
+System.err.println("[JVDBG] GlyphCache, renderN\n");
     }
 
     private void addDataToQuad(GlyphData data, VertexBuffer vb,

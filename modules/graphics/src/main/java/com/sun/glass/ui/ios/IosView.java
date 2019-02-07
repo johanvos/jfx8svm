@@ -36,8 +36,15 @@ final class IosView extends View {
 
     private long nativePtr;
 
+    static {
+System.err.println("[IOSVIEW CLINIT]");
+        IosGestureSupport.ping();
+    }
+
     public IosView() {
         super();
+System.err.println("[IOSVIEW INIT]");
+        IosGestureSupport.ping();
     }
 
     // Constants /reusing Mac OS X values

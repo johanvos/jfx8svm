@@ -292,7 +292,9 @@ public class NGText extends NGShape {
 
     private void renderText(Graphics g, FontStrike strike, BaseBounds clipBds,
                             Color selectionColor, int op) {
+System.err.println("[JVDBG] RENDERTEXT 0, length = \n"+runs.length);
         for (int i = 0; i < runs.length; i++) {
+System.err.println("[JVDBG] RENDERTEXT 1\n");
             TextRun run = (TextRun)runs[i];
             RectBounds lineBounds = run.getLineBounds();
             Point2D pt = run.getLocation();
@@ -305,25 +307,32 @@ public class NGText extends NGShape {
                 if (x + run.getWidth() < clipBds.getMinX()) continue;
             }
             y -= lineBounds.getMinY();
+System.err.println("[JVDBG] RENDERTEXT 2\n");
 
             if ((op & TEXT) != 0 && run.getGlyphCount() > 0) {
                 if ((op & FILL) != 0) {
+System.err.println("[JVDBG] RENDERTEXT 3\n");
                     int start = run.getStart();
+System.err.println("[JVDBG] RENDERTEXT 3.4\n");
                     g.drawString(run, strike, x, y,
                                  selectionColor,
                                  selectionStart - start,
                                  selectionEnd - start);
+System.err.println("[JVDBG] RENDERTEXT 4\n");
                 } else {
+System.err.println("[JVDBG] RENDERTEXT 5\n");
                     BaseTransform t = BaseTransform.getTranslateInstance(x, y);
                     if ((op & SHAPE_FILL) != 0) {
                         g.fill(strike.getOutline(run, t));
                     } else {
                         g.draw(strike.getOutline(run, t));
                     }
+System.err.println("[JVDBG] RENDERTEXT 6\n");
                 }
 
             }
             if ((op & DECORATION) != 0) {
+System.err.println("[JVDBG] RENDERTEXT 7\n");
                 Metrics metrics = strike.getMetrics();
                 if (underline) {
                     float offset = y + metrics.getUnderLineOffset();
@@ -338,9 +347,11 @@ public class NGText extends NGShape {
                         g.drawRect(x, offset, run.getWidth(), thickness);
                     }
                 }
+System.err.println("[JVDBG] RENDERTEXT 8\n");
                 if (strikethrough) {
                     float offset = y + metrics.getStrikethroughOffset();
                     float thickness = metrics.getStrikethroughThickness();
+System.err.println("[JVDBG] RENDERTEXT 9\n");
                     if ((op & SHAPE_FILL) != 0) {
                         if (thickness <= 1f && g.getTransformNoClone().isTranslateOrIdentity()) {
                             float myt = (float)g.getTransformNoClone().getMyt();
@@ -350,8 +361,10 @@ public class NGText extends NGShape {
                     } else {
                         g.drawRect(x, offset, run.getWidth(), thickness);
                     }
+System.err.println("[JVDBG] RENDERTEXT 10\n");
                 }
             }
         }
+System.err.println("[JVDBG] RENDERTEXT N\n");
     }
 }

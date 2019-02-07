@@ -31,16 +31,16 @@
 #import "GlassDragDelegate.h"
 
 @interface GlassGestureDelegate : NSObject<UIGestureRecognizerDelegate> {
-
+    
 }
 @end
 
 typedef __attribute__((NSObject)) CFMutableDictionaryRef GlassMutableDictionaryRef;
 
 // helper class that implements the custom GlassView functionality
-@interface GlassViewDelegate : NSObject<UIScrollViewDelegate, GlassDragSourceDelegate, UITextFieldDelegate>
+@interface GlassViewDelegate : NSObject<UIScrollViewDelegate, GlassDragSourceDelegate, UITextFieldDelegate, UITextViewDelegate>
 {
-
+   
 }
 
 // delegate owner glass view
@@ -77,7 +77,7 @@ typedef __attribute__((NSObject)) CFMutableDictionaryRef GlassMutableDictionaryR
 
 - (void)sendJavaTouchEvent:(UIEvent *)theEvent;
 
-- (void) sendJavaInputMethodEvent:(NSString *) text clauseBoundary:(int[])clsBndr attrBoundary:(int[])attrBndr attrValue:(Byte[])attrVal
+- (void) sendJavaInputMethodEvent:(NSString *) text clauseBoundary:(int[])clsBndr attrBoundary:(int[])attrBndr attrValue:(Byte[])attrVal 
               committedTextLength:(int)cmtdTxtLen caretPos:(int)crtPos visiblePos:(int)visPos;
 
 - (BOOL)suppressMouseEnterExitOnMouseDown;

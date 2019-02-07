@@ -60,6 +60,7 @@ abstract class GLFactory {
      * Instantiate singleton factories if available, the OS native ones.
      */
     static {
+System.err.println("GLFACTORY.CLINIT");
 
         final String factoryClassName;
         if (PlatformUtil.isUnix()) {
@@ -92,6 +93,7 @@ abstract class GLFactory {
         }
         if (PrismSettings.verbose) {
             System.out.println("GLFactory using " + factoryClassName);
+            System.err.println("GLFACTORY using " + factoryClassName);
         }
         platformFactory = factoryClassName == null ? null :
             AccessController.doPrivileged(new FactoryLoader(factoryClassName));
