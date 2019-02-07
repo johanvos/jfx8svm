@@ -37,6 +37,10 @@ import com.sun.glass.ui.Window;
 final class IosWindow extends Window {
     protected IosWindow(Window owner, Screen screen, int styleMask) {
         super(owner, screen, styleMask);
+        setPlatformScale(screen.getUIScale());
+        setRenderScale(screen.getRenderScale());
+        System.err.println("[JVDBG] CREATED IOSWINDOW!, ps = "+screen.getUIScale()+", rs = "+screen.getRenderScale());
+
     }
     protected IosWindow(long parent) {
         super(parent);
@@ -97,5 +101,11 @@ final class IosWindow extends Window {
         // implement for child windows
         return 0;
     }
+
+    @Override
+    public float getOutputScale() {
+        return getRenderScale();
+    }
+
 
 }
